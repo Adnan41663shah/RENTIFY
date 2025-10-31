@@ -131,9 +131,16 @@
         <div class="card listing-card">
           <!-- Wishlist Heart -->
           <div class="wishlist">
-            <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= listing._id %>"></i>
+            <i class="fa-solid fa-heart wishlist-icon <%= (typeof wishlistIds !== 'undefined' && wishlistIds.includes(String(listing._id))) ? 'red-heart' : '' %>" data-listing-id="<%= listing._id %>"></i>
           </div>
-          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img">
+          <% 
+            const _i0 = (listing.images && listing.images.length) ? listing.images[0] : null;
+            const _i0Url = _i0 ? (typeof _i0 === 'string' ? _i0 : (_i0.url || _i0.secure_url || _i0.path)) : null;
+            const _is = listing.image || null;
+            const _isUrl = _is ? (typeof _is === 'string' ? _is : (_is.url || _is.secure_url || _is.path)) : null;
+            const cardImg = _i0Url || _isUrl || '/assets/rentifylogo2.png';
+          %>
+          <img src="<%= cardImg %>" class="card-img-top" alt="listing_img" loading="lazy" onerror="this.src='/assets/rentifylogo2.png'">
           <div class="card-img-overlay"></div>
           <div class="card-body">
             <h4 class="card-text">

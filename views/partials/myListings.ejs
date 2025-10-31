@@ -2,10 +2,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <div class="listings-container mt-3">
-  <h1 class="ms-3">My Listings</h1>
+  <h1 class="ms-3">My Properties</h1>
   <% if(listings.length == 0){ %>
     <div class="text-center p-5 bg-light rounded shadow-sm">
-      <h4 class="mb-3">No listings yet, click to add...</h4>
+      <h4 class="mb-3">No Properties yet, click to add...</h4>
       <a class="upload-btn d-block" href="/listings/new"><i class="fa-solid fa-table-list me-2"></i>List Your Property</a>
     </div>  
   <% }else{ %>
@@ -23,7 +23,14 @@
 
         <!-- Image Section -->
         <div class="listing-image">
-          <img src="<%= listing.image.url %>" alt="listing_img">
+          <% 
+            const _img0 = (listing.images && listing.images.length) ? listing.images[0] : null;
+            const _img0Url = _img0 ? (typeof _img0 === 'string' ? _img0 : (_img0.url || _img0.secure_url || _img0.path)) : null;
+            const _single = listing.image || null;
+            const _singleUrl = _single ? (typeof _single === 'string' ? _single : (_single.url || _single.secure_url || _single.path)) : null;
+            const myListImg = listing.displayUrl || _img0Url || _singleUrl || '/assets/rentifylogo2.png';
+          %>
+          <img src="<%= myListImg %>" alt="listing_img" onerror="this.src='/assets/rentifylogo2.png'">
           <div class="wishlist">
             <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= listing._id %>"></i>
           </div>
@@ -40,5 +47,5 @@
     </div>
   <% } }%>
 </div>
-<script src="public/js/wishlist.js"></script>
+<script src="/js/wishlist.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

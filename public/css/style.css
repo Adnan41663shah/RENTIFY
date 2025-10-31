@@ -6,6 +6,11 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: rgb(249 250 251) !important;
+    background-image: radial-gradient(1200px 600px at 10% -10%, rgba(100, 149, 237, 0.06), transparent 60%),
+                      radial-gradient(1200px 600px at 100% 10%, rgba(255, 182, 193, 0.06), transparent 60%),
+                      linear-gradient(180deg, #ffffff, #f7f8fb);
+    background-attachment: fixed;
+    font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 .container {
@@ -446,4 +451,20 @@ body {
 
 .book-btn:hover {
     background-position: left bottom !important;
+}
+
+/* =========================================
+   Helpers for Amenities UI (Bootstrap-based)
+========================================= */
+.hover-bg:hover {
+  background-color: #e9ecef !important; /* Bootstrap light */
+}
+
+.amenity-item:hover {
+  background-color: #f8f9fa; /* very light hover */
+  cursor: pointer;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }

@@ -9,16 +9,22 @@ let listingSchema = new Schema({
         required: true,
     },
     description: String,
-    image: {
-        url: String,
-        filename: String,
-    },
+    images: [
+        {
+            url: String,
+            filename: String,
+        }
+    ],
     price: {
         type: Number,
         min: 0,
     },
     location: String,
     country: String,
+    amenities: {
+        type: Schema.Types.Mixed,
+        default: {},
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
@@ -40,7 +46,7 @@ let listingSchema = new Schema({
             required: true,
         }
     }
-});
+}, { timestamps: true });
 
 listingSchema.post("findOneAndDelete", async (listing) => {
     if(listing){

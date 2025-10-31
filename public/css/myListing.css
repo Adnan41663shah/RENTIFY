@@ -37,6 +37,7 @@
   position: relative !important;
   width: 150px !important;
   min-width: 150px !important;
+  height: 160px !important; /* ensure visible height on desktop */
   overflow: hidden !important;
 }
 
@@ -79,12 +80,14 @@
 }
 
 .ED-container{
+  display: flex !important;
+  gap: .5rem !important;
   justify-content: end !important;
 }
-.ED-container button, a{
+.ED-container button, .ED-container a{
   transition: box-shadow 0.3s ease;
 }
-.ED-container button:hover, a:hover{
+.ED-container button:hover, .ED-container a:hover{
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
@@ -96,10 +99,29 @@
 
   .listing-image {
     width: 100% !important;
-    height: 200px !important;
+    height: 180px !important;
   }
 
   .listing-details {
     padding: 15px !important;
+  }
+
+  .upload-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .ED-container {
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+  }
+  .ED-container .btn {
+    flex: 1 1 48% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .listing-image {
+    height: 160px !important;
   }
 }

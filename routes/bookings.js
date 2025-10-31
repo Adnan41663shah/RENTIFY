@@ -8,6 +8,8 @@ const PDFDocument = require("pdfkit");
 const Booking = require("../models/booking.js");
 const Listing = require("../models/listing.js");
 const User = require("../models/user.js");
+const Notification = require("../models/notification.js");
+const { isLoggedin } = require("../middleware.js");
 
 const router = express.Router();
 
@@ -17,6 +19,45 @@ const GST_RATE = 0.18; // 18%
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+// ---- Remove a cancelled booking (do not delete the listing) ----
+router.post("/:bookingId/remove", isLoggedin, async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    if (!req.user || String(booking.user) !== String(req.user._id)) {
+      return res.status(403).json({ error: "Not authorized to remove this booking" });
+    }
+
+    // Only allow removal if already cancelled (as per requirement)
+    if (booking.status !== "Cancelled") {
+      return res.status(400).json({ error: "Booking must be cancelled before removal" });
+    }
+
+    // Try to remove receipt file if exists
+    const receiptsDir = ensureReceiptsDir();
+    const receiptFilename = `receipt_${bookingId}.pdf`;
+    const receiptAbsPath = path.join(receiptsDir, receiptFilename);
+    if (fs.existsSync(receiptAbsPath)) {
+      try { fs.unlinkSync(receiptAbsPath); } catch (_) { /* ignore */ }
+    }
+
+    // Delete only the booking (keep the listing intact)
+    await Booking.deleteOne({ _id: bookingId });
+
+    const accepts = req.headers.accept || "";
+    if (accepts.includes("text/html")) {
+      return res.redirect(`/profile/${req.user._id}`);
+    }
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("Remove booking error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // ---- Helpers ----
@@ -70,6 +111,84 @@ router.post("/create-order", async (req, res) => {
   }
 });
 
+// ---- Get blocked dates for a listing (confirmed bookings only) ----
+router.get("/listing/:listingId/blocked-dates", async (req, res) => {
+  try {
+    const { listingId } = req.params;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const bookings = await Booking.find({
+      listing: listingId,
+      status: "Confirmed",
+      // only return ranges that end after today (i.e., still relevant)
+      checkOut: { $gt: today },
+    }, {
+      checkIn: 1,
+      checkOut: 1,
+      _id: 0,
+    });
+
+    // Return date ranges as ISO strings (inclusive of checkIn to exclusive of checkOut)
+    const ranges = bookings.map(b => ({
+      start: new Date(b.checkIn).toISOString().split("T")[0],
+      end: new Date(b.checkOut).toISOString().split("T")[0],
+    }));
+    return res.json({ ranges });
+  } catch (err) {
+    console.error("Blocked dates error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Cancel a booking ----
+router.post("/:bookingId/cancel", isLoggedin, async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    if (!req.user || String(booking.user) !== String(req.user._id)) {
+      return res.status(403).json({ error: "Not authorized to cancel this booking" });
+    }
+    if (booking.status === "Cancelled") {
+      return res.json({ success: true, status: booking.status });
+    }
+    booking.status = "Cancelled";
+    await booking.save();
+
+    // Notify listing owner about the cancellation
+    try {
+      const listing = await Listing.findById(booking.listing).populate('owner');
+      const user = await User.findById(booking.user);
+      if (listing && listing.owner) {
+        const ownerId = listing.owner._id ? listing.owner._id : listing.owner;
+        await Notification.create({
+          recipient: ownerId,
+          type: "booking_cancelled",
+          message: `${user?.username || user?.email || "A user"} cancelled a booking for: ${listing.title}`,
+          listing: listing._id,
+          booking: booking._id,
+        });
+      }
+    } catch (e) {
+      console.error("Notification create (booking_cancelled) error:", e);
+    }
+
+    // If this was an HTML form submission, redirect back to My Bookings
+    const accepts = req.headers.accept || "";
+    if (accepts.includes("text/html")) {
+      return res.redirect(`/profile/${req.user._id}`);
+    }
+
+    // Otherwise, respond with JSON for API clients
+    return res.json({ success: true, status: booking.status });
+  } catch (err) {
+    console.error("Cancel booking error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // ---- Verify Payment, Save Booking, Generate Receipt ----
 router.post("/verify", async (req, res) => {
   try {
@@ -111,6 +230,20 @@ router.post("/verify", async (req, res) => {
     const perNight = Number(listingDoc.price) || 0;
     const nights = diffNights(booking.checkIn, booking.checkOut);
 
+    // Prevent overlapping bookings for this listing (only against Confirmed bookings)
+    const newCheckIn = new Date(booking.checkIn);
+    const newCheckOut = new Date(booking.checkOut);
+    const conflict = await Booking.findOne({
+      listing: booking.listing,
+      status: "Confirmed",
+      // overlap if existing.checkIn < newCheckOut AND existing.checkOut > newCheckIn
+      checkIn: { $lt: newCheckOut },
+      checkOut: { $gt: newCheckIn },
+    });
+    if (conflict) {
+      return res.status(409).json({ success: false, error: "Selected dates are no longer available. Please choose different dates." });
+    }
+
     const subtotal = perNight * nights;
     const gstAmount = Math.round(subtotal * GST_RATE);
     const grandTotal = subtotal + gstAmount;
@@ -128,6 +261,22 @@ router.post("/verify", async (req, res) => {
       // (not adding pricing fields to DB to avoid schema change)
     });
     await newBooking.save();
+
+    // Notify listing owner about the new booking
+    try {
+      if (listingDoc.owner) {
+        const ownerId = listingDoc.owner._id ? listingDoc.owner._id : listingDoc.owner;
+        await Notification.create({
+          recipient: ownerId,
+          type: "booking_created",
+          message: `${userDoc.username || userDoc.email || "A user"} booked your property: ${listingDoc.title}`,
+          listing: listingDoc._id,
+          booking: newBooking._id,
+        });
+      }
+    } catch (e) {
+      console.error("Notification create (booking_created) error:", e);
+    }
 
     // Generate PDF receipt
     const receiptsDir = ensureReceiptsDir();
@@ -261,3 +410,32 @@ router.post("/verify", async (req, res) => {
 });
 
 module.exports = router;
+
+// ---- Download Receipt by Booking ID ----
+// Secured so only the booking owner can download their receipt
+router.get("/:bookingId/receipt", isLoggedin, async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    if (!req.user || String(booking.user) !== String(req.user._id)) {
+      return res.status(403).json({ error: "Not authorized to access this receipt" });
+    }
+
+    const receiptsDir = ensureReceiptsDir();
+    const receiptFilename = `receipt_${bookingId}.pdf`;
+    const receiptAbsPath = path.join(receiptsDir, receiptFilename);
+
+    if (!fs.existsSync(receiptAbsPath)) {
+      return res.status(404).json({ error: "Receipt not found for this booking" });
+    }
+
+    return res.download(receiptAbsPath, receiptFilename);
+  } catch (err) {
+    console.error("Download receipt error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});

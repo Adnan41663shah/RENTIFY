@@ -12,6 +12,31 @@
     filter: brightness(1.1) !important;
 }
 
+/* Responsive Gallery */
+.gallery {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 12px 0 16px 0 !important;
+}
+
+.gallery-item {
+    width: 100% !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+.gallery-item img {
+    width: 100% !important;
+    height: 300px !important;
+    object-fit: cover !important;
+    display: block !important;
+    transform-origin: center center;
+    transition: transform 0.5s ease, filter 0.4s ease, opacity 0.4s ease !important;
+    opacity: 1;
+}
+
 /* Card Styling */
 .show-card {
     padding-left: 0 !important;
@@ -50,27 +75,78 @@
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
 }
 
+/* Image hover: subtle zoom + tilt */
+.gallery-item:hover img {
+  transform: scale(1.05) rotate(0.5deg);
+}
+
+/* Image in-view fade-in */
+.gallery-item.in-view img {
+  opacity: 1;
+}
+
 /* Book Button Styling */
 .book-btn {
-    background: linear-gradient(45deg, #333, #555) !important;
+    background: linear-gradient(45deg, #b71c1c, #e53935) !important; /* match delete */
     border: none !important;
-    transition: background 0.3s ease, transform 0.2s ease !important;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(229,57,53,0.25) !important;
 }
 
 .book-btn:hover {
-    background: linear-gradient(45deg, #555, #333) !important;
+    background: linear-gradient(45deg, #8e0000, #c62828) !important;
     transform: scale(1.05) !important;
+    box-shadow: 0 6px 16px rgba(229,57,53,0.35) !important;
 }
 
 /* Edit/Delete Buttons */
 .edit-btn {
     background: linear-gradient(45deg, #444, #666) !important;
     border: none !important;
-    transition: transform 0.2s ease !important;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
 }
 
 .edit-btn:hover {
     transform: scale(1.05) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18) !important;
+}
+
+/* Submit Review button gradient (red-green) */
+.submit-review-btn {
+  background: linear-gradient(45deg,  #8e0000, #c62828) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+}
+.submit-review-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18) !important;
+  filter: brightness(1.02);
+}
+.submit-review-btn:active { transform: scale(0.99); }
+
+/* Delete button style */
+.delete-btn {
+  background: linear-gradient(45deg, #b71c1c, #e53935) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(229,57,53,0.25) !important;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.delete-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #8e0000, #c62828) !important;
+  box-shadow: 0 6px 16px rgba(229,57,53,0.35) !important;
+}
+
+/* Focus-visible outlines for accessibility */
+.btn:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(40, 90, 255, 0.35) !important;
+  outline-offset: 2px !important;
 }
 
 /* Trash Icon Hover */
@@ -93,20 +169,27 @@
 /* Reviews Section Styling */
 .reviews-wrapper {
     margin-bottom: 1.5rem !important;
+    scroll-behavior: smooth !important;
+    overflow-x: auto !important;
 }
 
 .review-card {
     width: 280px !important;
     flex: 0 0 auto !important;
-    transition: transform 0.3s ease , box-shadow 0.3s ease !important;
+    transition: transform 0.3s ease , box-shadow 0.3s ease, opacity 0.4s ease !important;
     border-radius: 0.75rem !important;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+    opacity: 1 !important; /* visible by default, override any stray rules */
+    visibility: visible !important;
+    transform: none !important;
 }
 
 .review-card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
 }
+
+
 
 /* Scrollbar Styling */
 .reviews-wrapper::-webkit-scrollbar {
@@ -124,7 +207,7 @@
 
 /* Map Section Styling */
 #map {
-    height: 400px !important;
+    height: 480px !important;
     width: 100% !important;
     border-radius: 1rem !important;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
@@ -133,6 +216,18 @@
 
 #map:hover {
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+    transform: scale(1.01);
+}
+
+/* Section fade-in utility */
+.section-fade {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+.section-fade.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Price Calculation Box Styling */
@@ -172,29 +267,94 @@ input:focus, textarea:focus {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    .show-img {
-        height: 30vh !important;
-    }
-
-    .review-card {
-        width: 220px !important;
-    }
-
-    #map {
-        height: 300px !important;
-    }
+  .show-img { height: 30vh !important; }
+  .gallery-item img { height: 200px !important; }
+  .review-card { width: 220px !important; }
+  #map { height: 360px !important; }
 }
 
 @media (max-width: 576px) {
-    .show-img {
-        height: 25vh !important;
-    }
+  .show-img { height: 25vh !important; }
+  .gallery { grid-template-columns: 1fr 1fr !important; }
+  .gallery-item img { height: 160px !important; }
+  .review-card { width: 180px !important; }
+  #map { height: 280px !important; }
+}
 
-    .review-card {
-        width: 180px !important;
-    }
+/* ===============================
+   Amenities Scrollable Section
+=============================== */
+.amenities-scroll {
+  max-height: 350px; /* fixed visual height */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px; /* space for hidden scrollbar */
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
 
-    #map {
-        height: 250px !important;
-    }
+/* Hide scrollbar on desktop while preserving scroll */
+.amenities-scroll::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+.amenities-scroll {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Slight shadow on inner content while scrolling */
+.amenities-scroll.scrolling {
+  box-shadow: inset 0 6px 10px -10px rgba(0,0,0,0.25), inset 0 -6px 10px -10px rgba(0,0,0,0.25);
+}
+
+/* Category card hover + fade-in */
+.amenity-cat {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  animation: amenityFadeIn 350ms ease both;
+}
+.amenity-cat:hover {
+  transform: translateY(-1px);
+  background-color: #fafafa;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+/* Staggered fade-in for first few categories */
+.amenities-list .amenity-cat:nth-child(1) { animation-delay: 30ms; }
+.amenities-list .amenity-cat:nth-child(2) { animation-delay: 60ms; }
+.amenities-list .amenity-cat:nth-child(3) { animation-delay: 90ms; }
+.amenities-list .amenity-cat:nth-child(4) { animation-delay: 120ms; }
+.amenities-list .amenity-cat:nth-child(5) { animation-delay: 150ms; }
+
+@keyframes amenityFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Amenity badge hover */
+.amenity-badge {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.amenity-badge:hover {
+  transform: translateY(-1px);
+  background-color: #f1f3f5 !important; /* light */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Responsive: reduce fixed height a bit on small screens */
+@media (max-width: 576px) {
+  .amenities-scroll { max-height: 300px; }
+}
+
+/* JS helper: add/remove .scrolling based on scroll position */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

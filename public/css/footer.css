@@ -7,7 +7,6 @@
 .footer a {
     color: #fff;
     text-decoration: none;
-    margin: 0 10px;
 }
 
 .footer a:hover {
@@ -19,9 +18,9 @@
     margin-left: 15px;
     transition: color 0.3s ease !important;
 }
+
 .social-icons a:hover{
     color: blue !important;
-
 }
 
 @media (max-width: 767px) {

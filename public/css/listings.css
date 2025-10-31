@@ -1,18 +1,15 @@
 /* Navbar search */
 .search-form {
-    margin-left: 25% !important;
-    margin-top: 20px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex: 6 !important;
-    max-width: 600px !important;
+    margin: 20px auto !important; /* center */
+    display: block !important;    /* let inner grid control layout */
+    max-width: 1100px !important; /* wide on desktop to fit one row */
     width: 100% !important;
     background: #fff !important;
-    border-radius: 50px !important;
+    border-radius: 16px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
     overflow: hidden !important;
     transition: box-shadow 0.3s ease !important;
+    padding: 10px 12px !important;
 }
 
 .search-form:hover {
@@ -57,27 +54,11 @@
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
-    .search-form {
-      margin-left: auto !important;
-      max-width: 500px !important;
-    }
+    .search-form { max-width: 900px !important; }
 }
 
 @media (max-width: 768px) {
-    .search-form {
-        flex-direction: column !important;
-        padding: 0.5rem !important;
-    }
-
-    .search-input {
-        width: 100% !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .search-btn {
-        width: 80% !important;
-        justify-content: center !important;
-    }
+    .search-form { max-width: 680px !important; }
 }
 
 @media (max-width: 576px) {
@@ -90,4 +71,26 @@
         padding: 0.6rem 1rem !important;
         font-size: 0.9rem !important;
     }
+}
+
+/* Advanced search: one row on desktop, stacked on mobile */
+.search-advanced { display: block !important; }
+.search-grid {
+  display: grid !important;
+  grid-template-columns: 1.3fr 1fr 0.8fr 0.8fr 0.9fr 0.8fr auto !important; /* desktop one row */
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.search-advanced .form-control,
+.search-advanced .form-select { border-radius: 10px !important; }
+
+@media (max-width: 992px) {
+  .search-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .search-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 576px) {
+  .search-grid { grid-template-columns: 1fr; }
 }

@@ -18,17 +18,18 @@
   })
 })()
 
-// display after tax switch functionality
-let taxSwitch = document.getElementById("switchCheckDefault");
-taxSwitch.addEventListener("click", () => {
-  let taxInfo = document.getElementsByClassName("tax-info")
-
-  for (info of taxInfo) {
-    if (info.style.display != "inline") {
-      info.style.display = "inline";
-    } else {
-      info.style.display = "none";
+// display after tax switch functionality (only if present)
+const taxSwitch = document.getElementById("switchCheckDefault");
+if (taxSwitch) {
+  taxSwitch.addEventListener("click", () => {
+    const taxInfo = document.getElementsByClassName("tax-info");
+    for (const info of taxInfo) {
+      if (info.style.display !== "inline") {
+        info.style.display = "inline";
+      } else {
+        info.style.display = "none";
+      }
     }
-  }
-});
+  });
+}
 

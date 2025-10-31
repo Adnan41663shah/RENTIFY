@@ -1,48 +1,150 @@
 <link rel="stylesheet" href="/css/myBookings.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<div class="container py-4">
-  <h1 class="mb-4">My Bookings</h1>
 
-  <% if(bookings.length === 0) { %>
-    <div class="text-center p-5 bg-light rounded shadow-sm">
-      <h4 class="mb-3">No bookings yet</h4>
-      <a href="/listings/allListing" class="btn btn-primary"><i class="fa-solid fa-search"></i> Explore more</a>
-    </div>
-  <% } else { %>
-    <div class="row g-4">
-      <% bookings.forEach(item => { %>
-        <div class="col-md-6 col-lg-4">
-          <div class="card booking-card shadow-sm h-100">
-            <a href="/listings/<%= item._id %>" class="text-decoration-none text-dark">
-              <div class="position-relative">
-                <img src="<%= item.image.url %>" class="card-img-top booking-img" alt="Listing Image">
-                <div class="wishlist">
-                  <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= item._id %>"></i>
+<div class="container py-4">
+  <h1 class="mb-3">My Bookings</h1>
+
+  <ul class="nav nav-pills gap-2 mb-3 flex-nowrap overflow-auto" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming-pane" type="button" role="tab" aria-controls="upcoming-pane" aria-selected="true">Upcoming</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past-pane" type="button" role="tab" aria-controls="past-pane" aria-selected="false">Past</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="upcoming-pane" role="tabpanel" aria-labelledby="upcoming-tab" tabindex="0">
+      <% if (!upcoming || upcoming.length === 0) { %>
+        <div class="text-center p-5 bg-light rounded shadow-sm">
+          <h5 class="mb-2">No upcoming bookings</h5>
+          <% if (!past || past.length === 0) { %>
+            <p class="text-muted mb-3">You haven't booked any stays yet.</p>
+            <a href="/listings/allListing" class="btn btn-primary"><i class="fa-solid fa-search"></i> Explore more</a>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div class="row g-3 g-md-4">
+          <% upcoming.forEach(item => { %>
+            <div class="col-12 col-sm-6 col-lg-4">
+              <div class="card booking-card shadow-sm h-100">
+                <a href="/listings/<%= item._id %>" class="text-decoration-none text-dark">
+                  <div class="position-relative">
+                    <% 
+                      const _b0 = (item.images && item.images.length) ? item.images[0] : null;
+                      const _b0Url = _b0 ? (typeof _b0 === 'string' ? _b0 : (_b0.url || _b0.secure_url || _b0.path)) : null;
+                      const _bs = item.image || null;
+                      const _bsUrl = _bs ? (typeof _bs === 'string' ? _bs : (_bs.url || _bs.secure_url || _bs.path)) : null;
+                      const bookingImgUrl = _b0Url || _bsUrl || '/assets/rentifylogo2.png';
+                    %>
+                    <img src="<%= bookingImgUrl %>" class="card-img-top booking-img" alt="Listing Image" onerror="this.src='/assets/rentifylogo2.png'">
+                    <div class="wishlist">
+                      <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= item._id %>"></i>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title"><%= item.title %></h5>
+                    <p class="card-text text-muted mb-1">
+                      <i class="fa-solid fa-location-dot"></i> <%= item.location %>, <%= item.country %>
+                    </p>
+                    <p class="card-text mb-2">
+                      <b>&#x20B9;<%= item.price?.toLocaleString("en-IN") %></b> / Day
+                    </p>
+                    <hr>
+                    <h6>Booking Details:</h6>
+                    <p class="mb-1"><strong>Check-in:</strong> <%= new Date(item.booking.checkIn).toLocaleDateString() %></p>
+                    <p class="mb-1"><strong>Check-out:</strong> <%= new Date(item.booking.checkOut).toLocaleDateString() %></p>
+                    <p class="mb-1"><strong>Guests:</strong> <%= item.booking.guests %></p>
+                    <p class="mb-1"><strong>Booking-Date:</strong> <%= new Date(item.booking.booking_date).toLocaleDateString() %></p>
+                    <% const status = item.booking.status; %>
+                    <% const statusClass = status === 'Confirmed' ? 'bg-success' : (status === 'Cancelled' ? 'bg-danger' : 'bg-secondary'); %>
+                    <p class="mb-0"><strong>Status:</strong> <span class="badge <%= statusClass %>"><%= status %></span></p>
+                  </div>
+                </a>
+                <div class="card-footer bg-transparent border-top-0 pb-3 px-3">
+                  <a class="btn btn-sm btn-outline-primary w-100" href="/api/bookings/<%= item.booking._id %>/receipt">
+                    <i class="fa-solid fa-download"></i> Download receipt
+                  </a>
+                  <% if (item.booking.status !== 'Cancelled') { %>
+                    <form action="/api/bookings/<%= item.booking._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');" class="mt-2">
+                      <button class="btn btn-sm btn-outline-danger w-100" type="submit">
+                        <i class="fa-solid fa-ban"></i> Cancel booking
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <form action="/api/bookings/<%= item.booking._id %>/remove" method="POST" onsubmit="return confirm('This will remove the booking from your list. Continue?');" class="mt-2">
+                      <button class="btn btn-sm btn-danger w-100" type="submit">
+                        <i class="fa-solid fa-trash"></i> Remove
+                      </button>
+                    </form>
+                  <% } %>
                 </div>
               </div>
-              <div class="card-body">
-                <h5 class="card-title"><%= item.title %></h5>
-                <p class="card-text text-muted mb-1">
-                  <i class="fa-solid fa-location-dot"></i> <%= item.location %>, <%= item.country %>
-                </p>
-                <p class="card-text mb-2">
-                  <b>&#x20B9;<%= item.price.toLocaleString("en-IN") %></b> / Day
-                </p>
-                <hr>
-                <h6>Booking Details:</h6>
-                <p class="mb-1"><strong>Check-in:</strong> <%= new Date(item.booking.checkIn).toLocaleDateString() %></p>
-                <p class="mb-1"><strong>Check-out:</strong> <%= new Date(item.booking.checkOut).toLocaleDateString() %></p>
-                <p class="mb-1"><strong>Guests:</strong> <%= item.booking.guests %></p>
-                <p class="mb-1"><strong>Booking-Date:</strong> <%= new Date(item.booking.booking_date).toLocaleDateString() %></p>
-                <p class="mb-1"><strong>Payment-id:</strong> <%= item.booking.paymentId %></p>
-                <p class="mb-0"><strong>Status:</strong> <span class="badge bg-success"><%= item.booking.status %></span></p>
-              </div>
-            </a>
-          </div>
+            </div>
+          <% }) %>
         </div>
-      <% }) %>
+      <% } %>
     </div>
-  <% } %>
+
+    <div class="tab-pane fade" id="past-pane" role="tabpanel" aria-labelledby="past-tab" tabindex="0">
+      <% if (!past || past.length === 0) { %>
+        <div class="text-center p-5 bg-light rounded shadow-sm">
+          <h5 class="mb-0">No past bookings</h5>
+        </div>
+      <% } else { %>
+        <div class="row g-3 g-md-4">
+          <% past.forEach(item => { %>
+            <div class="col-12 col-sm-6 col-lg-4">
+              <div class="card booking-card shadow-sm h-100 border-0">
+                <a href="/listings/<%= item._id %>" class="text-decoration-none text-dark">
+                  <div class="position-relative">
+                    <% 
+                      const _b0 = (item.images && item.images.length) ? item.images[0] : null;
+                      const _b0Url = _b0 ? (typeof _b0 === 'string' ? _b0 : (_b0.url || _b0.secure_url || _b0.path)) : null;
+                      const _bs = item.image || null;
+                      const _bsUrl = _bs ? (typeof _bs === 'string' ? _bs : (_bs.url || _bs.secure_url || _bs.path)) : null;
+                      const bookingImgUrl = _b0Url || _bsUrl || '/assets/rentifylogo2.png';
+                    %>
+                    <img src="<%= bookingImgUrl %>" class="card-img-top booking-img" alt="Listing Image" onerror="this.src='/assets/rentifylogo2.png'">
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title d-flex align-items-center gap-2">
+                      <span><%= item.title %></span>
+                      <span class="badge bg-secondary">Past</span>
+                    </h5>
+                    <p class="card-text text-muted mb-1">
+                      <i class="fa-solid fa-location-dot"></i> <%= item.location %>, <%= item.country %>
+                    </p>
+                    <p class="card-text mb-2">
+                      <b>&#x20B9;<%= item.price?.toLocaleString("en-IN") %></b> / Day
+                    </p>
+                    <hr>
+                    <h6>Stay:</h6>
+                    <p class="mb-1"><strong>Check-in:</strong> <%= new Date(item.booking.checkIn).toLocaleDateString() %></p>
+                    <p class="mb-1"><strong>Check-out:</strong> <%= new Date(item.booking.checkOut).toLocaleDateString() %></p>
+                    <p class="mb-1"><strong>Guests:</strong> <%= item.booking.guests %></p>
+                  </div>
+                </a>
+                <div class="card-footer bg-transparent border-0 pb-3 px-3">
+                  <a class="btn btn-sm btn-outline-primary w-100" href="/api/bookings/<%= item.booking._id %>/receipt">
+                    <i class="fa-solid fa-download"></i> Download receipt
+                  </a>
+                  <% if (item.booking.status === 'Cancelled') { %>
+                    <form action="/api/bookings/<%= item.booking._id %>/remove" method="POST" onsubmit="return confirm('This will remove the booking from your list. Continue?');" class="mt-2">
+                      <button class="btn btn-sm btn-danger w-100" type="submit">
+                        <i class="fa-solid fa-trash"></i> Remove
+                      </button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </div>
-    <script src="/js/wishlist.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script src="/js/wishlist.js"></script>
+<script src="/js/bookings.js"></script>

@@ -1,0 +1,101 @@
+<!-- AI Chatbot Widget -->
+<div id="chatbot-widget" class="chatbot-container">
+  <!-- Chatbot Icon -->
+  <div id="chatbot-icon" class="chatbot-icon">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5l3 3v-3c1.66 0 3-1.34 3-3V9c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+      <circle cx="8.5" cy="9.5" r="1.5" fill="white"/>
+      <circle cx="15.5" cy="9.5" r="1.5" fill="white"/>
+      <path d="M8 14h8c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1z" fill="white"/>
+    </svg>
+  </div>
+
+  <!-- Chat Window -->
+  <div id="chat-window" class="chat-window">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-title">
+        <div class="bot-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5l3 3v-3c1.66 0 3-1.34 3-3V9c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+            <circle cx="8.5" cy="9.5" r="1.5" fill="white"/>
+            <circle cx="15.5" cy="9.5" r="1.5" fill="white"/>
+            <path d="M8 14h8c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1z" fill="white"/>
+          </svg>
+        </div>
+        <div class="bot-info">
+          <h6 class="bot-name">Rentify AI</h6>
+          <span class="bot-status">Online</span>
+        </div>
+      </div>
+      <button id="minimize-chat" class="minimize-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 13H5v-2h14v2z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="chat-messages">
+      <!-- Welcome message -->
+      <div class="message bot-message">
+        <div class="message-avatar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5l3 3v-3c1.66 0 3-1.34 3-3V9c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+            <circle cx="8.5" cy="9.5" r="1.5" fill="white"/>
+            <circle cx="15.5" cy="9.5" r="1.5" fill="white"/>
+            <path d="M8 14h8c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1z" fill="white"/>
+          </svg>
+        </div>
+        <div class="message-content">
+          <div class="message-bubble">
+            <% if (currUser) { %>
+              Welcome back, <%= currUser.username %>! 👋 I'm Rentify AI, your property assistant. How can I help you today?
+            <% } else { %>
+              Hello! 👋 I'm Rentify AI, your property assistant. I can help you find properties, answer questions about rentals, or guide you through our platform. What would you like to know?
+            <% } %>
+          </div>
+          <div class="message-time">Just now</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <div class="chat-input-wrapper">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." maxlength="500">
+        <button id="send-message" class="send-btn" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div class="chat-footer">
+        <small class="text-muted">Powered by Rentify AI</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading indicator template -->
+<template id="loading-template">
+  <div class="message bot-message">
+    <div class="message-avatar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5l3 3v-3c1.66 0 3-1.34 3-3V9c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+        <circle cx="8.5" cy="9.5" r="1.5" fill="white"/>
+        <circle cx="15.5" cy="9.5" r="1.5" fill="white"/>
+        <path d="M8 14h8c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1z" fill="white"/>
+      </svg>
+    </div>
+    <div class="message-content">
+      <div class="message-bubble loading-bubble">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

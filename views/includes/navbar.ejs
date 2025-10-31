@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
   <div class="container-fluid">
     <!-- Logo -->
       <a class="navbar-brand" href="/listings">
@@ -6,7 +6,7 @@
       </a>
 
     <!-- Hamburger toggler -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -19,7 +19,7 @@
       <a class="nav-link login-btn" href="/login">Login</a>
     <% } %>
     <% if(currUser){ %>
-      <p class="nav-link">Welcome, <%= currUser.username %></p>
+      <p class="nav-link mb-0">Welcome, <%= currUser.username %></p>
 
       <!-- Desktop view user circle with tooltip -->
       <% if(!currUser.profileImage){ %>

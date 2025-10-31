@@ -1,21 +1,43 @@
 <% layout("/layouts/boilerplate") %>
-    <form class="search-form" role="search">
-      <input class="form-control me-2 search-input" type="search" placeholder="Search Destinations">
-      <button class="btn search-btn" type="submit">
-        <i class="fa-solid fa-magnifying-glass"></i> Search
-      </button>
+    <form class="search-form search-advanced" role="search" method="get" action="/listings/allListing">
+      <div class="search-grid">
+        <input class="form-control search-input" name="q" type="search" placeholder="Search title or country" value="<%= typeof q !== 'undefined' ? q : '' %>">
+        <input class="form-control" name="location" type="text" placeholder="Location" value="<%= typeof location !== 'undefined' ? location : '' %>">
+        <input class="form-control" name="minPrice" type="number" min="0" placeholder="Min Price" value="<%= typeof minPrice !== 'undefined' ? minPrice : '' %>">
+        <input class="form-control" name="maxPrice" type="number" min="0" placeholder="Max Price" value="<%= typeof maxPrice !== 'undefined' ? maxPrice : '' %>">
+        <select class="form-select" name="sort">
+          <option value="new" <%= sort === 'new' ? 'selected' : '' %>>Newest</option>
+          <option value="price_asc" <%= sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price_desc" <%= sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="az" <%= sort === 'az' ? 'selected' : '' %>>A-Z</option>
+          <option value="za" <%= sort === 'za' ? 'selected' : '' %>>Z-A</option>
+        </select>
+        <select class="form-select" name="limit">
+          <option value="12" <%= Number(limit) === 12 ? 'selected' : '' %>>12 / page</option>
+          <option value="24" <%= Number(limit) === 24 ? 'selected' : '' %>>24 / page</option>
+          <option value="48" <%= Number(limit) === 48 ? 'selected' : '' %>>48 / page</option>
+        </select>
+        <button class="btn search-btn" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+      </div>
     </form>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted"><%= totalCount %> results</div>
+    <div class="small text-muted">Page <%= page %> of <%= totalPages %></div>
+  </div>
 
   <!-- Listings -->
   <div class="row listings-container mt-3">
-    <% for(listing of allListings) { %>
+    <% for(let listing of allListings) { %>
       <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card listing-card">
           <!-- Wishlist Heart -->
           <div class="wishlist">
-            <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= listing._id %>"></i>
+            <i class="fa-solid fa-heart wishlist-icon <%= (typeof wishlistIds !== 'undefined' && wishlistIds.includes(String(listing._id))) ? 'red-heart' : '' %>" data-listing-id="<%= listing._id %>"></i>
           </div>
-          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img">
+          <img src="<%= (listing.images && listing.images.length > 0) ? listing.images[0].url : '' %>" class="card-img-top" alt="listing_img">
           <div class="card-img-overlay"></div>
           <div class="card-body">
             <h4 class="card-text">
@@ -31,3 +53,23 @@
       </a>
       <% } %>
   </div>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+  <nav class="pagination-nav" aria-label="Listings pagination">
+    <ul class="pagination justify-content-center mt-4">
+      <% const qsBase = `q=${encodeURIComponent(q||'')}&location=${encodeURIComponent(location||'')}&minPrice=${encodeURIComponent(minPrice||'')}&maxPrice=${encodeURIComponent(maxPrice||'')}&sort=${encodeURIComponent(sort||'')}&limit=${encodeURIComponent(limit||'')}`; %>
+      <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+        <a class="page-link" href="/listings/allListing?<%= qsBase %>&page=<%= page-1 %>" tabindex="-1">Prev</a>
+      </li>
+      <% for(let p = 1; p <= totalPages; p++) { %>
+        <li class="page-item <%= p === page ? 'active' : '' %>">
+          <a class="page-link" href="/listings/allListing?<%= qsBase %>&page=<%= p %>"><%= p %></a>
+        </li>
+      <% } %>
+      <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+        <a class="page-link" href="/listings/allListing?<%= qsBase %>&page=<%= page+1 %>">Next</a>
+      </li>
+    </ul>
+  </nav>
+  <% } %>

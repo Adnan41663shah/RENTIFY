@@ -1,58 +1,88 @@
 <% layout("/layouts/boilerplate") %>
-  <div class="profile-container d-flex vh-100 bg-light">
+<div class="profile-container d-flex vh-100 bg-light">
+  <div class="left-panel bg-white shadow p-3 rounded">
+    <div class="user-info text-center mb-4 position-relative">
+      <!-- Profile Picture -->
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="userId" value="<%= user._id %>" />
 
-    <div class="left-panel bg-white shadow p-3 rounded">
-      <div class="user-info text-center mb-4 position-relative">
+        <div class="position-relative profile-icon mx-auto">
+          <img
+            id="profileImage"
+            src="<%= user.profileImage || '/assets/default-profile.png' %>"
+            class="rounded-circle"
+            style="width: 150px; height: 150px; object-fit: cover"
+          />
 
-        <!-- Profile Picture -->
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="userId" value="<%= user._id %>">
+          <label
+            for="imageUpload"
+            class="camera-icon rounded-circle bg-white border shadow-sm"
+          >
+            <i class="bi bi-camera-fill"></i>
+          </label>
+          <input
+            type="file"
+            id="imageUpload"
+            name="user[profileImage]"
+            accept="image/*"
+            style="display: none"
+            onchange="this.form.submit()"
+          />
+        </div>
+      </form>
 
-          <div class="position-relative profile-icon mx-auto">
-            <img id="profileImage" src="<%= user.profileImage || '/assets/default-profile.png' %>"
-              class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
-
-            <label for="imageUpload" class="camera-icon rounded-circle bg-white border shadow-sm">
-              <i class="bi bi-camera-fill"></i>
-            </label>
-            <input type="file" id="imageUpload" name="user[profileImage]" accept="image/*" style="display: none;"
-              onchange="this.form.submit()">
-          </div>
-        </form>
-
-        <h4>
-          <%= user.username %>
-        </h4>
-        <p class="text-muted">
-          <%= user.email %>
-        </p>
-      </div>
-      <!-- User Tasks -->
-      <div class="user-tasks d-flex flex-column gap-2">
-        <button class="btn btn-outline-primary" onclick="loadPage('myListings')">My Listings</button>
-        <button class="btn btn-outline-success" onclick="loadPage('myBookings')">My Bookings</button>
-        <button class="btn btn-outline-warning" onclick="loadPage('wishlist')">Wishlist</button>
-
-        <a href="/logout" class="btn btn-outline-danger mt-3">Logout</a>        
-      </div>
+      <h4><%= user.username %></h4>
+      <p class="text-muted"><%= user.email %></p>
     </div>
+    <!-- User Tasks -->
+    <div class="user-tasks d-flex flex-column gap-2">
+      <button class="btn btn-outline-primary" onclick="loadPage('myListings')">
+        My Properties
+      </button>
+      <button class="btn btn-outline-success" onclick="loadPage('myBookings')">
+        My Bookings
+      </button>
+      <button class="btn btn-outline-warning" onclick="loadPage('wishlist')">
+        Wishlist
+      </button>
+      <button class="btn btn-outline-info" onclick="loadPage('notifications')">
+        Notifications
+      </button>
 
-    <div class="right-panel flex-grow-1 bg-white shadow p-4 rounded ms-4" id="right-panel">
-      <h3 id="h3">Welcome! <%= user.username %></h3>
+      <a href="/logout" class="btn btn-outline-danger mt-3">Logout</a>
     </div>
-
   </div>
 
-  <!-- Bootstrap Icons CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <div
+    class="right-panel flex-grow-1 bg-white shadow p-4 rounded ms-4"
+    id="right-panel"
+  >
+    <h3 id="h3">Welcome! <%= user.username %></h3>
+  </div>
+</div>
+
+<!-- Bootstrap Icons CDN -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
 
 <script>
   function loadPage(page) {
     fetch(`/<%= user._id %>/${page}`)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('right-panel').innerHTML = html;
+      .then((response) => response.text())
+      .then((html) => {
+        document.getElementById("right-panel").innerHTML = html;
       })
-      .catch(error => console.error('Error loading page:', error));
+      .catch((error) => console.error("Error loading page:", error));
   }
+
+  // Auto-open panel if ?tab=... is provided
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab) {
+      loadPage(tab);
+    }
+  })();
 </script>

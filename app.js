@@ -23,6 +23,7 @@ const userRoute = require("./routes/user.js");
 const profileRoute = require("./routes/profile.js");
 const bookingRoute = require("./routes/bookings.js");
 const wishlistRoute = require('./routes/wishlist.js');
+const chatRoute = require('./routes/chat.js');
 
 const dbUrl = process.env.ATLASDB_URl;
 
@@ -107,6 +108,9 @@ app.use('/', wishlistRoute);
 // booking router
 app.use("/api/bookings", bookingRoute);
 
+// chat router
+app.use("/chat", chatRoute);
+
 // 404 Not Found
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
@@ -123,4 +127,4 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("App is listening on port 8080...");
 });
-// expressListRoutes(app);
+

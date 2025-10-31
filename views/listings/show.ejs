@@ -1,15 +1,40 @@
 <% layout("/layouts/boilerplate") %>
   <link rel="stylesheet" href="/css/show.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    /* Visible by default; only animate/hide when JS adds .js-enabled */
+    .section-fade { opacity: 1; transform: none; }
+    .js-enabled .section-fade { opacity: 0; transform: translateY(10px); transition: opacity 400ms ease, transform 400ms ease; }
+    .js-enabled .section-fade.in-view { opacity: 1; transform: none; }
+    .flatpickr-day.disabled, .flatpickr-day.flatpickr-disabled {
+      opacity: 0.5;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      document.body.classList.add('js-enabled');
+      // Immediately reveal sections to avoid any timing issues
+      document.querySelectorAll('.section-fade').forEach(el => el.classList.add('in-view'));
+    });
+  </script>
 
   <div class="row mt-3 mb-4">
-    <div class="col-12 col-md-6 offset-md-3 mb-2 listing-title text-center">
+    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-2 listing-title text-center">
       <h3 class="fs-4 fs-md-3 fs-lg-2">
         <%= listing.title %>
       </h3>
     </div>
 
-    <div class="card col-12 col-md-6 offset-md-3 px-2 my-2 d-flex show-card listing-card">
-      <img src="<%= listing.image.url %>" class="card-img-top show-img mb-2" alt="listing_image">
+    <div class="card col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 px-3 my-3 d-flex show-card listing-card">
+      <div class="gallery">
+        <% if (listing.images && listing.images.length > 0) { %>
+          <% for (let i = 0; i < Math.min(listing.images.length, 3); i++) { %>
+            <div class="gallery-item">
+              <img src="<%= listing.images[i].url %>" alt="listing_image_<%= i %>" loading="lazy">
+            </div>
+          <% } %>
+        <% } %>
+      </div>
       <div class="card-body">
         <p class="card-text"><i>
             <%= listing.description %>
@@ -36,18 +61,77 @@
           <%= listing.country %>
         </p>
         <div class="d-flex justify-content-between align-items-center">
-          <p class="card-text">Hosted by <i><b>
-                <%= listing.owner.username %>
-              </b></i></p>
+          <div class="d-flex align-items-center gap-2">
+            <% if (listing.owner && listing.owner.profileImage) { %>
+              <img src="<%= listing.owner.profileImage %>" alt="<%= listing.owner.username %> profile" width="48" height="48" class="rounded-circle border">
+            <% } else { %>
+              <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                <span class="fw-semibold"><%= listing.owner.username ? listing.owner.username[0].toUpperCase() : 'U' %></span>
+              </div>
+            <% } %>
+            <div class="ms-2">
+              <div class="fw-semibold"><%= listing.owner.username %></div>
+              <div class="text-muted small">Hosted by</div>
+            </div>
+          </div>
           <!-- Book Now Button -->
           <% if (!(currUser && currUser._id.equals(listing.owner._id))) { %>
             <button class="btn btn-dark book-btn ps-5 pe-5" data-bs-toggle="modal" data-bs-target="#bookingModal">
               Book Now
             </button>
-            <% } %>
+          <% } %>
         </div>
+        <% if (listing.amenities && Object.keys(listing.amenities).length) { %>
+          <hr class="my-3">
+          <div class="mb-2">
+            <h5 class="mb-2">What This Place Offers</h5>
+            <% function iconFor(item){
+                 const s = String(item).toLowerCase();
+                 if(s.includes('wi-fi') || s.includes('wifi')) return 'fa-wifi';
+                 if(s.includes('internet')) return 'fa-globe';
+                 if(s.includes('air') || s.includes('conditioning')) return 'fa-snowflake';
+                 if(s.includes('heating')) return 'fa-fire';
+                 if(s.includes('shower') || s.includes('bathtub')) return 'fa-shower';
+                 if(s.includes('tv') || s.includes('netflix')) return 'fa-tv';
+                 if(s.includes('parking')) return 'fa-square-parking';
+                 if(s.includes('pool')) return 'fa-person-swimming';
+                 if(s.includes('kitchen') || s.includes('dining') || s.includes('cooking') || s.includes('dishes')) return 'fa-utensils';
+                 if(s.includes('security') || s.includes('camera')) return 'fa-shield-halved';
+                 if(s.includes('fire extinguisher')) return 'fa-fire-extinguisher';
+                 if(s.includes('workspace') || s.includes('desk')) return 'fa-briefcase';
+                 if(s.includes('gym') || s.includes('fitness')) return 'fa-dumbbell';
+                 if(s.includes('laundry') || s.includes('washing') || s.includes('dryer')) return 'fa-soap';
+                 if(s.includes('elevator')) return 'fa-elevator';
+                 if(s.includes('wheelchair')) return 'fa-wheelchair';
+                 if(s.includes('coffee') || s.includes('kettle')) return 'fa-mug-saucer';
+                 if(s.includes('toiletries') || s.includes('toilet')) return 'fa-toilet-paper';
+                 if(s.includes('hair dryer')) return 'fa-wind';
+                 return 'fa-circle-check';
+               } %>
+            <div class="amenities-scroll">
+              <div class="d-flex flex-column gap-2 amenities-list">
+                <% Object.keys(listing.amenities).forEach(function(cat){ %>
+                  <% if (Array.isArray(listing.amenities[cat]) && listing.amenities[cat].length) { %>
+                  <div class="border rounded p-2 amenity-cat">
+                    <div class="fw-semibold text-secondary mb-1"><%= cat %></div>
+                    <div class="d-flex flex-wrap gap-2">
+                      <% listing.amenities[cat].forEach(function(item){ %>
+                        <span class="badge bg-light text-dark border px-2 py-1 hover-shadow amenity-badge">
+                          <i class="fa-solid <%= iconFor(item) %> me-1"></i><%= item %>
+                        </span>
+                      <% }) %>
+                    </div>
+                  </div>
+                  <% } %>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+        <% } %>
       </div>
     </div>
+
+    
 
     <!-- Booking Modal -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
@@ -102,19 +186,20 @@
     </div>
 
     <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
-      <div class="col-12 col-md-6 offset-md-3 my-3">
+      <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-3">
         <div class="d-flex gap-3">
           <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn flex-fill">Edit Listing</a>
           <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="flex-fill">
-            <button class="btn btn-dark w-100">Delete Listing</button>
+            <button class="btn btn-dark w-100 delete-btn" aria-label="Delete this listing">Delete Listing</button>
           </form>
         </div>
       </div>
       <% } %>
 
-        <div class="col-12 col-md-6 offset-md-3 mb-3 mt-3">
-          <% if (currUser) { %>
-            <h4>Write a Review</h4>
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-3 mt-3">
+          <% if (currUser && !hasUserReviewed) { %>
+            <div class="card review-form-card border-0 shadow-sm p-3">
+            <h4 class="mb-2">Write a Review</h4>
             <form action="/listings/<%= listing._id %>/review" method="POST" novalidate class="needs-validation">
 
               <div class="mb-3">
@@ -141,8 +226,13 @@
                 <div class="invalid-feedback">Add some comments for review</div>
               </div>
 
-              <button class="btn btn-dark edit-btn w-100">Submit Review</button>
+              <button class="btn w-100 submit-review-btn" aria-label="Submit your review">Submit Review</button>
             </form>
+            </div>
+            <% } else if (currUser && hasUserReviewed) { %>
+              <div class="alert alert-info" role="alert">
+                You’ve already submitted a review for this listing.
+              </div>
             <% } %>
 
               <hr>
@@ -227,7 +317,7 @@
         </div>
 
         <!-- MAP -->
-        <div class="col-12 col-md-6 offset-md-3 mb-3 mt-3">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-3 mt-3">
           <h4>Where you'll be</h4>
           <div id="map"></div>
         </div>
@@ -248,5 +338,7 @@
   </script>
 
   <script src="/js/map.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="/js/razorpay.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

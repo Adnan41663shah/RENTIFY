@@ -13,42 +13,32 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ listingId: listingId })
       })
-        .then(response => {
-          const contentType = response.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            return response.json().then(data => ({ status: response.status, body: data }));
-          } else {
-            // Handle non-JSON response (like HTML for redirect)
-            return response.text().then(text => ({ status: response.status, body: { success: false, message: 'Please login to continue.' } }))
-          }
-        })
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(({ status, body }) => {
-          if (status === 201) {
-            Toastify({
-              text: body.message,
-              duration: 3000,
-              gravity: "top",
-              position: "right",
-              style: {
-                background: "#4CAF50",
-                borderRadius: "1rem"
-              }
-            }).showToast();
-            this.classList.add('red-heart');
-          } else if (status === 409) {
-            Toastify({
-              text: body.message,
-              duration: 3000,
-              gravity: "top",
-              position: "right",
-              style: {
-                background: "#545900ff",
-                borderRadius: "1rem"
-              }
-            }).showToast();
+          if (status === 200 && body && body.success) {
+            if (body.added) {
+              this.classList.add('red-heart');
+              Toastify({
+                text: body.message || 'Added to wishlist',
+                duration: 2500,
+                gravity: "top",
+                position: "right",
+                style: { background: "#4CAF50", borderRadius: "1rem" }
+              }).showToast();
+            } else {
+              this.classList.remove('red-heart');
+              Toastify({
+                text: body.message || 'Removed from wishlist',
+                duration: 2500,
+                gravity: "top",
+                position: "right",
+                style: { background: "#FF9800", borderRadius: "1rem" }
+              }).showToast();
+            }
           } else if (status === 401) {
             Toastify({
               text: body.message || "Please login to add to wishlist",

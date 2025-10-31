@@ -21,7 +21,8 @@
 
         <!-- Image Section -->
         <div class="listing-image">
-          <img src="<%= listing.image.url %>" alt="listing_img">
+          <% const wishImg = (listing.images && listing.images.length && listing.images[0].url) || (listing.image && listing.image.url) || '/assets/rentifylogo2.png'; %>
+          <img src="<%= wishImg %>" alt="listing_img">
           <div class="wishlist">
             <i class="fa-solid fa-heart wishlist-icon" data-listing-id="<%= listing._id %>"></i>
           </div>
@@ -38,5 +39,5 @@
     </div>
   <% } }%>
 </div>
-<script src="public/js/wishlist.js"></script>
+<script src="/js/wishlist.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

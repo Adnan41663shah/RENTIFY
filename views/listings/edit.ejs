@@ -18,21 +18,20 @@
                     <div class="invalid-feedback">Please Enter a short description!</div>
                 </div>
                 <div class="mb-3">
-                    <label for="price" class="form-label">Price:</label>
-                    <input type="number" name="listing[price]" class="form-control" value="<%= listing.price %>"
-                        required>
-                    <div class="valid-feedback">Accepted</div>
-                    <div class="invalid-feedback">Price should be valid!</div>
+                    Current Images <br>
+                    <% if (listing.images && listing.images.length) { %>
+                        <% listing.images.slice(0,3).forEach(img => { %>
+                            <img src="<%= img.url.replace('/upload', '/upload/h_70,w_110') %>" alt="image" height="100" width="100" class="me-2 mb-2">
+                        <% }) %>
+                    <% } else if (originalImageUrl) { %>
+                        <img src="<%= originalImageUrl %>" alt="original image" height="100" width="100">
+                    <% } %>
                 </div>
                 <div class="mb-3">
-                    Original Image <br>
-                    <img src="<%= originalImageUrl %>" alt="original image" height="100px" width="100px">
-                </div>
-                <div class="mb-3">
-                    <label for="image" class="form-label">Upload New Image:</label>
-                    <input type="file" name="listing[image]" class="form-control">
+                    <label for="images" class="form-label">Upload New Images (max 3):</label>
+                    <input type="file" name="listing[images]" class="form-control" multiple>
                     <div class="valid-feedback">Accepted</div>
-                    <div class="invalid-feedback">Upload a valid Image!</div>
+                    <div class="invalid-feedback">Upload valid images!</div>
                 </div>
                 <div class="row">
                     <div class="mb-3 col-4">
@@ -50,7 +49,212 @@
                         <div class="invalid-feedback">Country should be valid!</div>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <input type="number" name="listing[price]" class="form-control" value="<%= listing.price %>"
+                        required>
+                    <div class="valid-feedback">Accepted</div>
+                    <div class="invalid-feedback">Price should be valid!</div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <label class="form-label mb-1">Amenities</label>
+                    <span class="text-muted small">Optional</span>
+                  </div>
+                  <input id="amenities-search" type="text" placeholder="Search amenities" class="form-control mb-2" aria-label="Search amenities">
+                  <div id="amenities-root" class="w-100"></div>
+                </div>
                 <button class="btn btn-dark edit-btn">Edit Listing</button>
             </form>
         </div>
     </div>
+    <script id="existingAmenitiesJSON" type="application/json"><%- JSON.stringify(listing.amenities || {}) %></script>
+    <script>
+      const existingAmenities = JSON.parse(document.getElementById('existingAmenitiesJSON').textContent || '{}');
+      const amenitiesData = {
+        "Property Essentials": [
+          "Wi-Fi / High-speed Internet",
+          "Air Conditioning",
+          "Heating",
+          "Hot Water",
+          "Electricity Backup (Generator/Inverter)",
+          "Private Entrance",
+          "Security Cameras on Property",
+          "Fire Extinguisher",
+          "First Aid Kit",
+          "Smoke Alarm",
+          "Carbon Monoxide Alarm"
+        ],
+        "Bedroom & Laundry": [
+          "Bed Linen",
+          "Extra Pillows & Blankets",
+          "Wardrobe / Closet",
+          "Hangers",
+          "Iron",
+          "Ironing Board",
+          "Washing Machine",
+          "Dryer",
+          "Laundry Soap",
+          "Safe"
+        ],
+        "Kitchen & Dining": [
+          "Fully Equipped Kitchen",
+          "Refrigerator",
+          "Microwave",
+          "Stove / Cooktop",
+          "Oven",
+          "Dishwasher",
+          "Toaster",
+          "Coffee Maker / Kettle",
+          "Cooking Basics (pots, pans, oil, salt, etc.)",
+          "Dishes & Silverware",
+          "Dining Table",
+          "Water Purifier"
+        ],
+        "Bathroom": [
+          "Shower",
+          "Bathtub",
+          "Towels",
+          "Toiletries (Shampoo, Soap, etc.)",
+          "Hair Dryer",
+          "Hot Water",
+          "Toilet Paper"
+        ],
+        "Entertainment": [
+          "Smart TV",
+          "Cable / Satellite Channels",
+          "Netflix / OTT Access",
+          "Sound System / Bluetooth Speaker",
+          "Board Games",
+          "Books and Magazines"
+        ],
+        "Outdoor Features": [
+          "Balcony / Terrace",
+          "Private Garden / Lawn",
+          "Private Pool",
+          "Shared Pool",
+          "Barbecue Grill",
+          "Outdoor Furniture",
+          "Fire Pit",
+          "Parking Space",
+          "Rooftop Access"
+        ],
+        "Recreation & Wellness": [
+          "Gym / Fitness Center",
+          "Spa / Sauna",
+          "Jacuzzi / Hot Tub",
+          "Yoga Mat / Meditation Space",
+          "Indoor Games (Table Tennis, Pool Table, etc.)"
+        ],
+        "Family & Kids Friendly": [
+          "Crib / Cot",
+          "High Chair",
+          "Children’s Books & Toys",
+          "Child-Safe Room Setup",
+          "Babysitter Recommendations"
+        ],
+        "Work & Connectivity": [
+          "Dedicated Workspace / Desk",
+          "Office Chair",
+          "Fast Wi-Fi (Speed Mention Option)",
+          "Power Backup",
+          "Printer / Scanner"
+        ],
+        "Accessibility & Safety": [
+          "Wheelchair Accessible",
+          "Elevator",
+          "Step-Free Access",
+          "Wide Doorways",
+          "Accessible Parking",
+          "Grab Bars in Bathroom"
+        ],
+        "Pet Amenities": [
+          "Pets Allowed",
+          "Pet Bed",
+          "Food & Water Bowls",
+          "Nearby Pet Park"
+        ],
+        "Transportation & Location": [
+          "Free Parking On Premises",
+          "Street Parking",
+          "Paid Parking Nearby",
+          "EV Charger",
+          "Airport Pickup / Drop",
+          "Public Transport Nearby",
+          "Bicycle / Scooter Rental"
+        ],
+        "Food & Hospitality": [
+          "Breakfast Included",
+          "Room Service",
+          "Mini Bar",
+          "Welcome Drink",
+          "Chef on Demand",
+          "Grocery Delivery"
+        ],
+        "Housekeeping & Maintenance": [
+          "Daily Cleaning Service",
+          "Laundry Service",
+          "Trash Disposal",
+          "24/7 Maintenance Support"
+        ],
+        "Luxury / Premium Services": [
+          "Butler Service",
+          "Chauffeur",
+          "Personal Concierge",
+          "Private Security",
+          "Event Hosting Space"
+        ],
+        "Eco-Friendly Features": [
+          "Solar Power",
+          "Rainwater Harvesting",
+          "Recycling Facilities",
+          "Organic Toiletries",
+          "Sustainable Furniture"
+        ]
+      };
+
+      function renderAmenities(filter = ""){
+        const root = document.getElementById("amenities-root");
+        root.innerHTML = "";
+        Object.entries(amenitiesData).forEach(([cat, items], idx) => {
+          const section = document.createElement("div");
+          section.className = "border rounded mb-2";
+
+          const header = document.createElement("button");
+          header.type = "button";
+          header.className = "w-100 text-start px-3 py-2 bg-light hover-bg border-0 d-flex align-items-center justify-content-between";
+          header.innerHTML = `<strong>${cat}</strong><small class=\"text-muted\">Toggle</small>`;
+
+          const body = document.createElement("div");
+          body.className = "px-3 py-2 d-none";
+          const list = document.createElement("div");
+          list.className = "row g-2";
+
+          const selected = new Set((existingAmenities[cat] || []));
+          const filtered = items.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
+          filtered.forEach((amenity, i) => {
+            const col = document.createElement("div");
+            col.className = "col-12 col-md-6";
+            const label = document.createElement("label");
+            label.className = "d-flex align-items-center gap-2 p-2 rounded amenity-item";
+            const checked = selected.has(amenity) ? 'checked' : '';
+            label.innerHTML = `
+              <input type=\"checkbox\" class=\"form-check-input\" name=\"listing[amenities][${cat}][]\" value=\"${amenity}\" ${checked}>
+              <span class=\"small\">${amenity}</span>
+            `;
+            col.appendChild(label);
+            list.appendChild(col);
+          });
+
+          body.appendChild(list);
+          header.addEventListener("click", () => { body.classList.toggle("d-none"); });
+          section.appendChild(header);
+          section.appendChild(body);
+          root.appendChild(section);
+        });
+      }
+
+      renderAmenities("");
+      const search = document.getElementById("amenities-search");
+      search.addEventListener("input", (e)=> renderAmenities(e.target.value));
+    </script>

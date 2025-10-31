@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<div class="container py-3">
+  <h3 class="mb-3">Notifications</h3>
+  <% if (!notifications || notifications.length === 0) { %>
+    <div class="alert alert-light border">No notifications yet.</div>
+  <% } else { %>
+    <div class="list-group">
+      <% notifications.forEach(n => { %>
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">
+                <% if (n.type === 'booking_created') { %>
+                  New booking received
+                <% } else if (n.type === 'booking_cancelled') { %>
+                  Booking cancelled
+                <% } else { %>
+                  Notification
+                <% } %>
+              </div>
+              <div class="small text-muted"><%= new Date(n.createdAt).toLocaleString() %></div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <% if (!n.read) { %>
+              <span class="badge bg-primary">New</span>
+              <% } %>
+              <form action="/<%= n.recipient %>/notifications/<%= n._id %>/delete" method="POST" onsubmit="return confirm('Delete this notification?');">
+                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Dismiss">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <div><%= n.message %></div>
+            <% if (n.listing) { %>
+              <div class="small text-muted">Listing: <a href="/listings/<%= n.listing._id %>"><%= n.listing.title %></a></div>
+            <% } %>
+            <% if (n.booking) { %>
+              <div class="small text-muted">Booking: 
+                <%= n.booking.checkIn ? new Date(n.booking.checkIn).toLocaleDateString() : '' %> → 
+                <%= n.booking.checkOut ? new Date(n.booking.checkOut).toLocaleDateString() : '' %>, 
+                Guests: <%= n.booking.guests || '-' %>, Status: <%= n.booking.status %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
