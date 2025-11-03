@@ -146,6 +146,12 @@
             <h4 class="card-text">
               <b><%= listing.title %></b>
             </h4>
+            <div class="d-flex align-items-center gap-2 small text-muted mb-1">
+              <span class="text-warning"><i class="fa-solid fa-star"></i></span>
+              <span><%= typeof listing.avgRating !== 'undefined' ? (listing.avgRating.toFixed ? listing.avgRating.toFixed(1) : listing.avgRating) : '0.0' %></span>
+              <span>•</span>
+              <span><%= listing.reviewCount || 0 %></span>
+            </div>
             <p class="card-text">
               <i class="fa-solid fa-location-dot"></i>
               <%= listing.location %>, <%= listing.country %>

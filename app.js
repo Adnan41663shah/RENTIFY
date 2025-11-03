@@ -24,6 +24,7 @@ const profileRoute = require("./routes/profile.js");
 const bookingRoute = require("./routes/bookings.js");
 const wishlistRoute = require('./routes/wishlist.js');
 const chatRoute = require('./routes/chat.js');
+const pagesRoute = require('./routes/pages.js');
 
 const dbUrl = process.env.ATLASDB_URl;
 
@@ -87,6 +88,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
+  res.locals.currentPath = req.path;
   next();
 });
 
@@ -110,6 +112,9 @@ app.use("/api/bookings", bookingRoute);
 
 // chat router
 app.use("/chat", chatRoute);
+
+// static pages router (features, about, contact)
+app.use('/', pagesRoute);
 
 // 404 Not Found
 app.use((req, res, next) => {

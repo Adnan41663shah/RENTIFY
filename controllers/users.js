@@ -1,4 +1,7 @@
 const User = require("../models/user.js")
+const Booking = require("../models/booking.js")
+const Listing = require("../models/listing.js")
+const Wishlist = require("../models/wishlist.js")
 
 module.exports.signupForm = (req,res) => {
     res.render("./users/signup.ejs");
@@ -70,7 +73,12 @@ module.exports.logoutUser = async (req, res, next) => {
 module.exports.profile = async (req,res) => {
     let { id } = req.params;
     const user = await User.findById(id);
-    res.render("users/profile", {user});
+    const [bookingsCount, listingsCount, wishlistCount] = await Promise.all([
+        Booking.countDocuments({ user: id }),
+        Listing.countDocuments({ owner: id }),
+        Wishlist.countDocuments({ user: id })
+    ]);
+    res.render("users/profile", { user, bookingsCount, listingsCount, wishlistCount });
 }
 
 module.exports.uploadProfilePic = async (req, res) => {

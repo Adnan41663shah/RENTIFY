@@ -1,31 +1,58 @@
-<footer class="footer">
-        <div class="container">
-            <div class="row align-items-center mb-4">
-                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
-                    <h4 class="fw-bold">RENTIFY</h4>
-                </div>
-                <div class="col-md-8">
-                    <ul class="nav justify-content-center justify-content-md-end">
-                        <li class="nav-item"><a class="nav-link px-2" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link px-2" href="#">List Layout</a></li>
-                        <li class="nav-item"><a class="nav-link px-2" href="#">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link px-2" href="#">Customer Support</a></li>
-                        <li class="nav-item"><a class="nav-link px-2" href="#">Services</a></li>
-                        <li class="nav-item"><a class="nav-link px-2" href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr style="border-color: #444;">
-            <div class="row align-items-center footer-bottom">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <small>&copy; Copyright. All rights reserved.</small>
-                </div>
-                <div class="col-md-6 text-center text-md-end social-icons d-flex justify-content-center justify-content-md-end">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
+<footer class="footer mt-5">
+  <div class="container">
+    <div class="row gy-4">
+      <div class="col-12 col-md-4">
+        <h4 class="fw-bold mb-2">RENTIFY</h4>
+        <p class="text-white small mb-3">Rent homes, apartments, and rooms with confidence. Discover stays, host your space, and travel smarter.</p>
+        <div class="social-icons d-flex gap-3">
+          <a aria-label="Facebook" href="#"><i class="fab fa-facebook-f"></i></a>
+          <a aria-label="X" href="#"><i class="fab fa-x-twitter"></i></a>
+          <a aria-label="YouTube" href="#"><i class="fab fa-youtube"></i></a>
+          <a aria-label="LinkedIn" href="#"><i class="fab fa-linkedin-in"></i></a>
         </div>
-    </footer>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <h6 class="heading">Company</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/listings">Browse Stays</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <h6 class="heading">Support</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Safety & Trust</a></li>
+          <li><a href="#">Cancellation Policy</a></li>
+          <li><a href="#">Report an Issue</a></li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <h6 class="heading">Subscribe</h6>
+        <p class="text-muted small">Get updates on new features, deals, and travel tips.</p>
+        <form class="newsletter" onsubmit="event.preventDefault();">
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="your@email.com" aria-label="Email">
+            <button class="btn btn-primary" type="submit">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <hr class="my-4 divider" />
+
+    <div class="row align-items-center footer-bottom">
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <small>&copy; <%= new Date().getFullYear() %> Rentify. All rights reserved.</small>
+      </div>
+      <div class="col-12 col-md-6 text-center text-md-end mt-2 mt-md-0">
+        <small class="text-muted">Made with ❤️ for travelers and hosts.</small>
+      </div>
+    </div>
+  </div>
+</footer>

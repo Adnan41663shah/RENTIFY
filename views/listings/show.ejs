@@ -19,10 +19,32 @@
   </script>
 
   <div class="row mt-3 mb-4">
-    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-2 listing-title text-center">
-      <h3 class="fs-4 fs-md-3 fs-lg-2">
-        <%= listing.title %>
-      </h3>
+    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-2 listing-title">
+      <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+        <div class="d-flex flex-column gap-1">
+          <h3 class="fs-4 fs-md-3 fs-lg-2 m-0">
+            <%= listing.title %>
+          </h3>
+          <div class="d-flex align-items-center gap-2 small text-muted">
+            <span class="text-warning"><i class="fa-solid fa-star"></i></span>
+            <span><%= typeof listing.avgRating !== 'undefined' ? listing.avgRating.toFixed ? listing.avgRating.toFixed(1) : listing.avgRating : '0.0' %> / 5</span>
+            <span>•</span>
+            <span><%= listing.reviewCount || 0 %> reviews</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-heart wishlist-icon <%= isWishlisted ? 'red-heart' : '' %>" data-listing-id="<%= listing._id %>" title="Add to wishlist" role="button" aria-label="Add to wishlist"></i>
+          <button id="shareBtn" class="btn btn-sm btn-outline-dark px-3" aria-label="Share this listing">
+            <i class="fa-solid fa-share-nodes me-1"></i> Share
+          </button>
+          <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+            <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm edit-btn px-3">Edit</a>
+            <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+              <button class="btn btn-sm delete-btn px-3" aria-label="Delete this listing">Delete</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
     </div>
 
     <div class="card col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 px-3 my-3 d-flex show-card listing-card">
@@ -131,16 +153,14 @@
       </div>
     </div>
 
-    
-
     <!-- Booking Modal -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content p-3">
-          <div class="modal-header">
+          <div class="modal-header bg-dark text-white">
             <h5 class="modal-title">Book <%= listing.title %>
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <form id="bookingForm">
@@ -185,16 +205,38 @@
       </div>
     </div>
 
-    <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
-      <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-3">
-        <div class="d-flex gap-3">
-          <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn flex-fill">Edit Listing</a>
-          <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="flex-fill">
-            <button class="btn btn-dark w-100 delete-btn" aria-label="Delete this listing">Delete Listing</button>
-          </form>
+    <!-- Share Modal (Fallback) -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content p-3">
+          <div class="modal-header">
+            <h5 class="modal-title">Share this listing</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Link</label>
+              <div class="input-group">
+                <input type="text" id="shareUrlInput" class="form-control" readonly>
+                <button class="btn btn-outline-secondary" id="copyShareUrlBtn">Copy</button>
+              </div>
+              <div id="copyStatus" class="form-text"></div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <a id="shareWhatsapp" class="btn btn-sm btn-success" target="_blank" rel="noopener">
+                <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp
+              </a>
+              <a id="shareFacebook" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                <i class="fa-brands fa-facebook me-1"></i> Facebook
+              </a>
+              <a id="shareTwitter" class="btn btn-sm btn-dark" target="_blank" rel="noopener">
+                <i class="fa-brands fa-x-twitter me-1"></i> X (Twitter)
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      <% } %>
+    </div>
 
         <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 mb-3 mt-3">
           <% if (currUser && !hasUserReviewed) { %>
@@ -331,6 +373,66 @@
     const coordinates = CoordinatesString.split(",");
     const address = "<%= listing.location %>";
     const title = "<%= listing.title %>";
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const shareBtn = document.getElementById('shareBtn');
+      const shareModalEl = document.getElementById('shareModal');
+      const shareUrlInput = document.getElementById('shareUrlInput');
+      const copyBtn = document.getElementById('copyShareUrlBtn');
+      const copyStatus = document.getElementById('copyStatus');
+      const wa = document.getElementById('shareWhatsapp');
+      const fb = document.getElementById('shareFacebook');
+      const tw = document.getElementById('shareTwitter');
+
+      const url = window.location.href;
+      const text = `${title} — ${address}`;
+
+      function populateFallback() {
+        if (shareUrlInput) shareUrlInput.value = url;
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(text + ' \n' + url)}`;
+        const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        const twUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        if (wa) wa.href = waUrl;
+        if (fb) fb.href = fbUrl;
+        if (tw) tw.href = twUrl;
+      }
+
+      async function handleShareClick() {
+        const shareData = { title, text, url };
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+            return;
+          } catch (e) {
+            // fall through to fallback on cancel or error
+          }
+        }
+        // Fallback modal
+        populateFallback();
+        if (window.bootstrap && shareModalEl) {
+          const modal = bootstrap.Modal.getOrCreateInstance(shareModalEl);
+          modal.show();
+        }
+      }
+
+      if (shareBtn) {
+        shareBtn.addEventListener('click', handleShareClick);
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async function () {
+          try {
+            await navigator.clipboard.writeText(shareUrlInput.value);
+            if (copyStatus) { copyStatus.textContent = 'Link copied!'; }
+          } catch (err) {
+            if (copyStatus) { copyStatus.textContent = 'Copy failed. Please copy manually.'; }
+          }
+          setTimeout(() => { if (copyStatus) copyStatus.textContent = ''; }, 1500);
+        });
+      }
+    });
   </script>
 
   <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })

@@ -1,18 +1,39 @@
 
 .navbar {
     height: 5rem;
-    background: #F8FAFC  !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    background-color: rgba(255, 255, 255, 0.72) !important; /* override Bootstrap background-color */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+}
+
+/* Explicitly override Bootstrap helper class if present on navbar */
+.navbar.bg-body-tertiary,
+.bg-body-tertiary.navbar {
+    background: rgba(255, 255, 255, 0.72) !important;
+    background-color: rgba(255, 255, 255, 0.72) !important;
+}
+.navbar.bg-light,
+.bg-light.navbar {
+    background: rgba(255, 255, 255, 0.72) !important;
+    background-color: rgba(255, 255, 255, 0.72) !important;
 }
 .container-fluid {
     height: 5rem;
     /* background: #F8FAFC  !important; */
+    /* align-items: center !important; */
 }
 .home-btn, .signup-btn, .login-btn{
     font-size: 1.3rem !important;
     margin-right: 0.5rem !important;
 }
 .home-btn{
+    position:relative;
+    top: -6px;
     color: #a66bff !important;
+    font-weight: 700 !important;
 }
 .login-btn{
     color: white !important;
@@ -22,6 +43,8 @@
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
 }
+
+/* (reverted) removed normalization/flex overrides that misaligned links */
 
 /* Default toggler customization */
 .navbar-toggler {
@@ -88,18 +111,44 @@
     line-height: 30px !important;
 }
 
-/* Logout button styling */
+/* Logout button: modern ghost style */
 .logout {
-    color: #ffffff !important;
-    width: 100px !important;
-    height: 50px !important;
-    border-radius: 14px !important;
-    background: linear-gradient(to right,  #8e0000, #c62828) !important;
-    font-size: 1.2rem !important;
-    text-align: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    color: #ef4444 !important; /* red-500 */
+    background: transparent !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    border-radius: 9999px !important;
+    padding: 0.9rem !important;
+    font-size: 0.9rem !important;
+    line-height: 1 !important;
     margin-left: 1rem !important;
     text-decoration: none !important;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease !important;
 }
+.logout:hover {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-color: rgba(239, 68, 68, 0.55) !important;
+    color: #dc2626 !important; /* red-600 */
+    box-shadow: 0 6px 16px rgba(239,68,68,0.12) !important;
+}
+
+/* Make Features, About, Contact bold */
+.navbar .nav-link[href="/features"],
+.navbar .nav-link[href="/about"],
+.navbar .nav-link[href="/contact"] {
+    font-weight: 700 !important;
+}
+
+/* Active state highlight: light blue background */
+.navbar .nav-link.active {
+    /* background: rgba(99, 102, 241, 0.12) !important; light indigo/blue */
+    color: #1d4ed8 !important; /* blue-700 */
+    border-radius: 10px !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+}
+
 
 /* =========================================
    Mobile adjustments
@@ -149,7 +198,7 @@
     .navbar-nav {
         margin-left: auto !important;
         font-size: 0.9rem !important;
-        background-color:  rgba(255, 255, 255, 0.95)   !important;
+        background-color:  rgba(255, 255, 255, 0.95) !important;
         width: 60% !important;
         border-radius: 8px !important;
         padding: 1rem !important;

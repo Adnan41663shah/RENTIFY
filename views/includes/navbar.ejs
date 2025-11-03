@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md navbar-light sticky-top">
   <div class="container-fluid">
     <!-- Logo -->
       <a class="navbar-brand" href="/listings">
@@ -11,37 +11,48 @@
     </button>
 
     <!-- Collapsible links -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-    <div class="navbar-nav text-end">
-    <a class="nav-link home-btn" href="/listings">Home</a>
-    <% if(!currUser) { %>
-      <a class="nav-link signup-btn" href="/signup">Signup</a>
-      <a class="nav-link login-btn" href="/login">Login</a>
-    <% } %>
-    <% if(currUser){ %>
-      <p class="nav-link mb-0">Welcome, <%= currUser.username %></p>
-
-      <!-- Desktop view user circle with tooltip -->
-      <% if(!currUser.profileImage){ %>
-        <div class="nav-link user-ch d-none d-md-block">
-        <a href="/profile/<%= currUser._id  %>"><%= currUser.username[0].toUpperCase() %></a>
-        <span class="tooltip-text">My Profile</span>
-      </div>
-      <% }else{ %>
-        <div class="nav-link user-ch d-none d-md-block">
-          <a href="/profile/<%= currUser._id %>"><img src="<%= currUser.profileImage %>"></a>
-          
-          <span class="tooltip-text">My Profile</span>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="w-100 d-flex align-items-center">
+        <!-- Left: Home + primary links -->
+        <div class="navbar-nav">
+          <a class="nav-link home-btn" href="/listings">Home</a>
+          <a class="nav-link<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/features')) ? ' active' : '' %>" href="/features">Features</a>
+          <a class="nav-link<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/about')) ? ' active' : '' %>" href="/about">About</a>
+          <a class="nav-link<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/contact')) ? ' active' : '' %>" href="/contact">Contact</a>
         </div>
-      <% } %>
-      
 
-      <!-- Mobile view 'My Profile' link -->
-      <a href="/profile/<%= currUser._id  %>" class="nav-link mobile-profile d-md-none">My Profile</a>
+        <!-- Right: auth/profile -->
+        <div class="navbar-nav ms-auto text-end">
+          <% if(!currUser) { %>
+            <a class="nav-link signup-btn" href="/signup">Signup</a>
+            <a class="nav-link login-btn" href="/login">Login</a>
+          <% } %>
+          <% if(currUser){ %>
+            <p class="nav-link mb-0">Welcome, <%= currUser.username %></p>
 
-      <a class="nav-link logout d-md-block" href="/logout">Logout</a>
-    <% } %>
-  </div>
-</div>
+            <!-- Desktop view user circle with tooltip -->
+            <% if(!currUser.profileImage){ %>
+              <div class="nav-link user-ch d-none d-md-block">
+                <a href="/profile/<%= currUser._id  %>"><%= currUser.username[0].toUpperCase() %></a>
+                <span class="tooltip-text">My Profile</span>
+              </div>
+            <% }else{ %>
+              <div class="nav-link user-ch d-none d-md-block">
+                <a href="/profile/<%= currUser._id %>"><img src="<%= currUser.profileImage %>"></a>
+                <span class="tooltip-text">My Profile</span>
+              </div>
+            <% } %>
+
+            <!-- Mobile view 'My Profile' link -->
+            <a href="/profile/<%= currUser._id  %>" class="nav-link mobile-profile d-md-none">My Profile</a>
+
+            <a class="nav-link logout d-md-block" href="/logout" aria-label="Logout">
+              <i class="fa-solid fa-right-from-bracket me-1"></i>
+              <span>Logout</span>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>

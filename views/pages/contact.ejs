@@ -1,0 +1,77 @@
+<% layout("/layouts/boilerplate") %>
+<section class="pages-hero contact-hero mb-4">
+  <div class="overlay"></div>
+  <div class="content container text-center">
+    <h1 class="display-5 fw-bold text-white">Get in Touch</h1>
+    <p class="lead text-white-50">We'd love to hear from you. Send us a message and we'll respond soon.</p>
+  </div>
+</section>
+
+<section class="container mb-5">
+  <div class="row g-4">
+    <div class="col-12 col-lg-7">
+      <div class="contact-card p-4">
+        <h5 class="mb-3">Send a Message</h5>
+        <form id="contactForm" action="/contact" method="POST" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="name">Name</label>
+            <input class="form-control <%= (errors && errors.name) ? 'is-invalid' : '' %>" id="name" name="name" type="text" required value="<%= (formData && formData.name) ? formData.name : '' %>" placeholder="Your full name">
+            <div class="invalid-feedback"><%= (errors && errors.name) ? errors.name : 'Please enter a valid name (min 2 characters).' %></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control <%= (errors && errors.email) ? 'is-invalid' : '' %>" id="email" name="email" type="email" required value="<%= (formData && formData.email) ? formData.email : '' %>" placeholder="you@example.com">
+            <div class="invalid-feedback"><%= (errors && errors.email) ? errors.email : 'Please enter a valid email address.' %></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="message">Message</label>
+            <textarea class="form-control <%= (errors && errors.message) ? 'is-invalid' : '' %>" id="message" name="message" rows="6" required placeholder="Write your message (at least 10 characters)"><%= (formData && formData.message) ? formData.message : '' %></textarea>
+            <div class="invalid-feedback"><%= (errors && errors.message) ? errors.message : 'Please enter at least 10 characters.' %></div>
+          </div>
+          <button class="contact-submit" type="submit">Send Message</button>
+        </form>
+        <script>
+          (function(){
+            const form = document.getElementById('contactForm');
+            if(!form) return;
+            form.addEventListener('submit', function(e){
+              let valid = true;
+              const nameEl = document.getElementById('name');
+              const emailEl = document.getElementById('email');
+              const msgEl = document.getElementById('message');
+
+              // Reset
+              [nameEl, emailEl, msgEl].forEach(el => el.classList.remove('is-invalid'));
+
+              // Name validation
+              const nameVal = (nameEl.value || '').trim();
+              if(nameVal.length < 2){ nameEl.classList.add('is-invalid'); valid = false; }
+
+              // Email validation
+              const emailVal = (emailEl.value || '').trim();
+              const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+              if(!emailRx.test(emailVal)) { emailEl.classList.add('is-invalid'); valid = false; }
+
+              // Message validation
+              const msgVal = (msgEl.value || '').trim();
+              if(msgVal.length < 10){ msgEl.classList.add('is-invalid'); valid = false; }
+
+              if(!valid){ e.preventDefault(); e.stopPropagation(); }
+            });
+          })();
+        </script>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="p-card p-4 h-100 d-flex flex-column justify-content-center">
+        <h5 class="fw-semibold">Contact Information</h5>
+        <p class="mb-2 text-muted">Our team is available 24/7.</p>
+        <div class="d-flex align-items-center gap-2 mb-1"><i class="fa-solid fa-envelope"></i><span>support@rentify.example</span></div>
+        <div class="d-flex align-items-center gap-2 mb-1"><i class="fa-solid fa-phone"></i><span>+91-95292-57473</span></div>
+        <div class="d-flex align-items-center gap-2"><i class="fa-solid fa-location-dot"></i><span>Amravati, India</span></div>
+        <div class="divider my-3"></div>
+        <p class="mb-0">“Hospitality is simply love in action.”</p>
+      </div>
+    </div>
+  </div>
+</section>

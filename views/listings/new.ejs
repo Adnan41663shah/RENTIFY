@@ -1,58 +1,138 @@
 <% layout("/layouts/boilerplate") %>
-    <div class="row"></div>
-    <div class="col-8 offset-2 mb-3">
-        <br>
-        <h1>Create new Listing</h1>
-        <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+<div class="new-listing-page py-3">
+  <div class="new-listing-hero mb-4">
+    <div class="content text-center text-sm-start container">
+      <h1 class="display-6 display-md-5 mb-1">Create your next great stay</h1>
+      <p class="new-listing-quote mb-0">“Homes are made of walls and beams; dreams are made of hopes and schemes.”</p>
+    </div>
+  </div>
+
+  <div class="container form-wrapper">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="p-3 p-sm-4 p-md-5 form-card d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <div class="mb-2 section-divider"><span>Ready to list?</span></div>
+            <h2 class="h4 mb-1">Create New Listing</h2>
+            <p class="mb-0 text-muted small">Start the guided 3-step form to publish your place.</p>
+          </div>
+          <button class="btn btn-dark add-btn" data-bs-toggle="modal" data-bs-target="#newListingModal">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Inspiration card -->
+  <div class="container mt-3">
+    <div class="inspire-hero">
+      <div class="inspire-bg"></div>
+      <div class="inspire-content">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-7">
+            <h2 class="mb-2 text-white">Share the story of your space</h2>
+            <p class="mb-3 text-white-75">“Every home tells a story — let yours inspire travelers to make memories.”</p>
+            <div class="d-flex flex-wrap gap-2 small">
+              <span class="badge rounded-pill bg-light text-dark px-3 py-2">High‑quality photos</span>
+              <span class="badge rounded-pill bg-light text-dark px-3 py-2">Clear house rules</span>
+              <span class="badge rounded-pill bg-light text-dark px-3 py-2">Local highlights</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-5 text-start text-md-end">
+            <a href="#newListingModal" data-bs-toggle="modal" class="btn btn-light px-4 rounded-pill shadow-sm">Start Listing</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Multistep Create Listing -->
+<div class="modal fade" id="newListingModal" tabindex="-1" aria-labelledby="newListingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="newListingModalLabel">Create New Listing</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="px-3 px-sm-4">
+        <!-- Progress Indicator -->
+        <div class="nl-steps d-flex align-items-center justify-content-between mb-2">
+          <div class="nl-step" data-step="1"><span>1</span><small>Basics</small></div>
+          <div class="nl-line flex-fill mx-2"></div>
+          <div class="nl-step" data-step="2"><span>2</span><small>Location & Photos</small></div>
+          <div class="nl-line flex-fill mx-2"></div>
+          <div class="nl-step" data-step="3"><span>3</span><small>Amenities</small></div>
+        </div>
+      </div>
+      <form id="listingMultiForm" action="/listings" method="POST" enctype="multipart/form-data" novalidate class="needs-validation">
+        <div class="modal-body pt-0">
+          <!-- Step 1: Basics -->
+          <div class="nl-step-pane" data-step="1">
             <div class="mb-3">
-                <label for="title" class="form-label">Title:</label>
-                <input type="text" name="listing[title]" class="form-control" placeholder="Enter title" required>
-                <div class="valid-feedback">Accepted</div>
-                <div class="invalid-feedback">Title should be valid!</div>
+              <label class="form-label">Title</label>
+              <input type="text" name="listing[title]" class="form-control" placeholder="Cozy 2BHK with city view" required>
+              <div class="valid-feedback">Accepted</div>
+              <div class="invalid-feedback">Title should be valid!</div>
             </div>
             <div class="mb-3">
-                <label for="description" class="form-label">Description:</label>
-                <textarea name="listing[description]" class="form-control" rows="2" cols="35" required></textarea>
-                <div class="valid-feedback">Accepted</div>
-                <div class="invalid-feedback">Please Enter a short Description!</div>
+              <label class="form-label">Description</label>
+              <textarea name="listing[description]" class="form-control" rows="3" placeholder="Describe your place, highlights, and nearby attractions" required></textarea>
+              <div class="valid-feedback">Accepted</div>
+              <div class="invalid-feedback">Please enter a short description!</div>
             </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price:</label>
-                <input type="number" name="listing[price]" class="form-control" placeholder="Enter number" required>
-                <div class="valid-feedback">Accepted</div>
-                <div class="invalid-feedback">Price should be valid!</div>
+            <div class="mb-1">
+              <label class="form-label">Price</label>
+              <input type="number" name="listing[price]" class="form-control" placeholder="Enter price" required>
+              <div class="valid-feedback">Accepted</div>
+              <div class="invalid-feedback">Price should be valid!</div>
             </div>
-            <div class="mb-3"> 
-                <label for="images" class="form-label">Upload Listing Images (max 3):</label>
+          </div>
+
+          <!-- Step 2: Photos & Location -->
+          <div class="nl-step-pane d-none" data-step="2">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label">Photos (max 3)</label>
                 <input type="file" name="listing[images]" class="form-control" multiple required>
-                <small class="text-muted">You can select up to 3 images.</small>
-            </div>
-            <div class="row">
-                <div class="mb-3 col-md-4">
-                    <label for="location" class="form-label">Location:</label>
-                    <input type="text" name="listing[location]" class="form-control" placeholder="Enter Location" required>
-                    <div class="valid-feedback">Accepted</div>
-                    <div class="invalid-feedback">location should be valid!</div>
-                </div>
-                <div class="mb-3 col-md-8">
-                    <label for="country" class="form-label">Country:</label>
-                    <input type="text" name="listing[country]" class="form-control" placeholder="Enter Coutry" required>
-                    <div class="valid-feedback">Accepted</div>
-                <div class="invalid-feedback">Country should be valid!</div>
-                </div>
-            </div>
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <label class="form-label mb-1">Amenities</label>
-                <span class="text-muted small">Optional</span>
+                <div class="input-help mt-1">Use bright, high-quality photos to attract more bookings.</div>
               </div>
-              <input id="amenities-search" type="text" placeholder="Search amenities" class="form-control mb-2" aria-label="Search amenities">
-              <div id="amenities-root" class="w-100"></div>
+              <div class="col-12 col-md-6">
+                <label class="form-label">Location</label>
+                <input type="text" name="listing[location]" class="form-control" placeholder="Area, landmark, etc." required>
+                <div class="valid-feedback">Accepted</div>
+                <div class="invalid-feedback">Location should be valid!</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Country</label>
+                <input type="text" name="listing[country]" class="form-control" placeholder="Enter Country" required>
+                <div class="valid-feedback">Accepted</div>
+                <div class="invalid-feedback">Country should be valid!</div>
+              </div>
             </div>
-            <button class="btn btn-dark add-btn">Add Listing</button>
-        </form>
+          </div>
+
+          <!-- Step 3: Amenities -->
+          <div class="nl-step-pane d-none" data-step="3">
+            <div class="mb-2 d-flex align-items-center justify-content-between">
+              <label class="form-label mb-1">Choose what you offer</label>
+              <span class="text-muted small">Optional</span>
+            </div>
+            <input id="amenities-search" type="text" placeholder="Search amenities" class="form-control mb-2" aria-label="Search amenities">
+            <div id="amenities-root" class="w-100"></div>
+            <p class="mb-0 text-muted small mt-2">“Great journeys begin with a single listing.”</p>
+          </div>
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" id="btnBack" disabled>Back</button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-dark" id="btnNext">Next</button>
+            <button type="submit" class="btn btn-dark d-none" id="btnSubmit">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
-    </div>
+  </div>
+  </div>
+
     <script>
       const amenitiesData = {
         "Property Essentials": [
@@ -124,13 +204,10 @@
         ],
         "Recreation & Wellness": [
           "Gym / Fitness Center",
-          "Spa / Sauna",
-          "Jacuzzi / Hot Tub",
           "Yoga Mat / Meditation Space",
           "Indoor Games (Table Tennis, Pool Table, etc.)"
         ],
         "Family & Kids Friendly": [
-          "Crib / Cot",
           "High Chair",
           "Children’s Books & Toys",
           "Child-Safe Room Setup",
@@ -166,26 +243,11 @@
           "Public Transport Nearby",
           "Bicycle / Scooter Rental"
         ],
-        "Food & Hospitality": [
-          "Breakfast Included",
-          "Room Service",
-          "Mini Bar",
-          "Welcome Drink",
-          "Chef on Demand",
-          "Grocery Delivery"
-        ],
         "Housekeeping & Maintenance": [
           "Daily Cleaning Service",
           "Laundry Service",
           "Trash Disposal",
           "24/7 Maintenance Support"
-        ],
-        "Luxury / Premium Services": [
-          "Butler Service",
-          "Chauffeur",
-          "Personal Concierge",
-          "Private Security",
-          "Event Hosting Space"
         ],
         "Eco-Friendly Features": [
           "Solar Power",
@@ -238,4 +300,53 @@
       renderAmenities("");
       const search = document.getElementById("amenities-search");
       search.addEventListener("input", (e)=> renderAmenities(e.target.value));
+    </script>
+    <script>
+      (function(){
+        const modalEl = document.getElementById('newListingModal');
+        if (!modalEl) return;
+
+        const panes = Array.from(document.querySelectorAll('.nl-step-pane'));
+        const steps = Array.from(document.querySelectorAll('.nl-step'));
+        const btnNext = document.getElementById('btnNext');
+        const btnBack = document.getElementById('btnBack');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const form = document.getElementById('listingMultiForm');
+        let current = 1;
+
+        function setActiveStep(step){
+          current = step;
+          panes.forEach(p => p.classList.toggle('d-none', p.getAttribute('data-step') !== String(step)));
+          steps.forEach(s => s.classList.toggle('active', s.getAttribute('data-step') === String(step)));
+
+          btnBack.disabled = (step === 1);
+          const isLast = (step === 3);
+          btnNext.classList.toggle('d-none', isLast);
+          btnSubmit.classList.toggle('d-none', !isLast);
+        }
+
+        function validateCurrentStep(){
+          const pane = panes.find(p => p.getAttribute('data-step') === String(current));
+          if (!pane) return true;
+          const inputs = Array.from(pane.querySelectorAll('input, textarea, select'));
+          // Trigger native validation UI
+          let ok = true;
+          inputs.forEach(el => {
+            if (!el.checkValidity()) ok = false;
+          });
+          if (!ok) form.reportValidity();
+          return ok;
+        }
+
+        btnNext?.addEventListener('click', () => {
+          if (!validateCurrentStep()) return;
+          if (current < 3) setActiveStep(current + 1);
+        });
+        btnBack?.addEventListener('click', () => {
+          if (current > 1) setActiveStep(current - 1);
+        });
+
+        // Reset steps on modal show
+        modalEl.addEventListener('shown.bs.modal', () => setActiveStep(1));
+      })();
     </script>

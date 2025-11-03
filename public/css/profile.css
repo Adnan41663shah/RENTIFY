@@ -63,3 +63,55 @@
 #imageUpload {
   display: none;
 }
+
+/* Profile Hero (scoped) */
+.profile-hero {
+  position: relative;
+  border-radius: 1rem !important;
+  min-height: 220px;
+  overflow: hidden;
+}
+.profile-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2,6,23,0.55), rgba(2,6,23,0.75)),
+              url('https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  filter: saturate(1.15);
+}
+.profile-hero .hero-content {
+  position: relative;
+  z-index: 1;
+}
+.profile-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+}
+
+@media (min-width: 768px) {
+  .profile-hero { min-height: 260px; }
+}
+
+/* Dashboard stat cards */
+.stat-card {
+  display: block;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 14px;
+  background: #f8fafc;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.stat-card .label { font-size: 0.85rem; color: #334155; font-weight: 600; }
+.stat-card .value { font-size: 1.6rem; font-weight: 700; line-height: 1; margin-top: 4px; color: #0f172a; }
+.stat-card .hint { font-size: 0.75rem; color: #64748b; margin-top: 6px; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(2,6,23,0.12); filter: brightness(1.02); }
+
+.stat-indigo { background: linear-gradient(180deg, rgba(99,102,241,0.08), rgba(99,102,241,0)); border: 1px solid rgba(99,102,241,0.25); }
+.stat-teal { background: linear-gradient(180deg, rgba(13,148,136,0.08), rgba(13,148,136,0)); border: 1px solid rgba(13,148,136,0.25); }
+.stat-rose { background: linear-gradient(180deg, rgba(244,63,94,0.08), rgba(244,63,94,0)); border: 1px solid rgba(244,63,94,0.25); }
+
+@media (max-width: 576px) {
+  .stat-card { padding: 12px 14px; }
+  .stat-card .value { font-size: 1.4rem; }
+}
