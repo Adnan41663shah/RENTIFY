@@ -87,20 +87,85 @@
   box-shadow: 0 0 0 0.2rem rgba(99,102,241,0.15);
 }
 
+/* Edit modal form styling - match new listing modal */
+#editListingModal .form-control,
+#editListingModal .form-select {
+  border-radius: 12px;
+  border: 1px solid #cbd5e1; /* slate-300 */
+  padding: 0.65rem 0.9rem;
+}
+
+#editListingModal .form-control:focus,
+#editListingModal .form-select:focus {
+  border-color: #6366f1; /* indigo-500 */
+  box-shadow: 0 0 0 0.2rem rgba(99,102,241,0.15);
+}
+
+#editListingModal .form-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+#editListingModal .input-help {
+  font-size: 0.8rem;
+  color: #64748b; /* slate-500 */
+}
+
 .input-help {
   font-size: 0.8rem;
   color: #64748b; /* slate-500 */
 }
 
-.add-btn {
-  border-radius: 9999px;
-  padding: 0.72rem 1.25rem;
-  background: linear-gradient(90deg, #4f46e5, #06b6d4);
-  border: none;
+/* Premium Start Button Wrapper */
+.premium-start-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.add-btn:hover {
-  filter: brightness(1.05);
+.premium-start-wrapper .premium-button.add-btn {
+  height: auto !important;
+  padding: 0.72rem 1.25rem !important;
+  font-size: 0.875rem !important;
+  margin: 0 !important;
+  border: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+/* Override old add-btn styles */
+.add-btn {
+  background: transparent !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+}
+
+/* Premium Start Listing Button Wrapper */
+.premium-start-listing-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.premium-start-listing-wrapper .premium-button.start-listing-btn {
+  height: auto !important;
+  padding: 0.75rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  margin: 0 !important;
+  border: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+
+.start-listing-btn {
+  background: transparent !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
 }
 
 /* Amenities */
@@ -146,8 +211,41 @@
 .nl-line { height: 2px; background: #cbd5e1; }
 
 /* Modal tweaks (scoped) */
-#newListingModal .modal-content { border-radius: 16px; border: 1px solid rgba(148,163,184,0.25); }
-#newListingModal .modal-header .btn-close { filter: invert(0.3); }
+#newListingModal .modal-content,
+#editListingModal .modal-content {
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.25);
+}
+
+/* Modal header styling - black background with white text */
+#newListingModal .modal-header,
+#editListingModal .modal-header {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  margin-bottom: 10px !important;
+}
+
+#newListingModal .modal-title,
+#editListingModal .modal-title {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+/* Close button styling for black background */
+#newListingModal .modal-header .btn-close,
+#editListingModal .modal-header .btn-close {
+  filter: invert(1) brightness(1) !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+#newListingModal .modal-header .btn-close:hover,
+#editListingModal .modal-header .btn-close:hover {
+  opacity: 1 !important;
+}
 
 /* Small screens first */
 @media (min-width: 576px) {

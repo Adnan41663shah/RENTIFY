@@ -80,41 +80,180 @@ body {
     margin-top: 50px;
 }
 
-#hero .explore-button {
-    display: flex;
+/* Premium Button Wrapper */
+.premium-button-wrapper {
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background-color: #285aff !important;
-    color: white !important;
-    border: none;
-    padding: 10px 40px !important;
-    border-radius: 8px;
-    font-size: 1rem !important;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-#hero .explore-button:hover{
-  background-color: #06258b !important;
+    justify-content: center;
 }
 
-#hero .upload-btn {
+/* Premium Button Border */
+.premium-button-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    transition: all 200ms;
+    background: linear-gradient(90deg, #FF8A3D 0%, #FF7A18 25%, #28B6FF 75%, #14E0FF 100%);
+    padding: 2px;
+    z-index: 0;
+}
+
+.premium-button-border-inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+}
+
+.premium-button-border-primary {
+    background: linear-gradient(180deg, #161616 0%, #0E0E0E 60%, #0B0B0B 100%);
+}
+
+.premium-button-border-ghost {
+    background: #000000;
+}
+
+/* Premium Button Base Styles */
+.premium-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    border-radius: 9999px;
+    transition: all 200ms ease-in-out;
+    outline: none;
+    text-decoration: none;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: transparent;
+    z-index: 1;
+    cursor: pointer;
+    border: none;
+}
+
+.premium-button.explore-button {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 28px rgba(255,255,255,0.06);
+}
+
+.premium-button-content {
+    position: relative;
+    z-index: 10;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background-color: transparent;
-    color: white;
-    border: 2px solid #ccc;
-    padding: 10px 40px;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    gap: 0.5rem;
 }
-#hero .upload-btn:hover{
-  background-color: white;
-  color: black;
+
+.premium-button:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Glow Effects */
+.premium-button-glow-base {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: -10;
+    box-shadow: 0 0 24px rgba(255,138,61,0.15), 0 0 28px rgba(20,224,255,0.12);
+    filter: blur(0px);
+}
+
+.premium-button-glow-hover {
+    position: absolute;
+    inset: -0.25rem;
+    border-radius: 9999px;
+    opacity: 0;
+    transition: opacity 200ms;
+    pointer-events: none;
+    z-index: -1;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45), -18px 0 18px rgba(255,138,61,0.35), 18px 0 18px rgba(20,224,255,0.30);
+}
+
+.premium-button-glow-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    opacity: 0;
+    transition: opacity 200ms;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(255,138,61,0.4) 0%, rgba(255,122,24,0.4) 25%, rgba(40,182,255,0.4) 75%, rgba(20,224,255,0.4) 100%);
+    filter: blur(8px);
+    transform: scale(1.1);
+}
+
+.premium-button-active-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 150ms ease-in-out;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.premium-button-focus-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -10;
+    background: linear-gradient(90deg, rgba(255,138,61,0.35) 0%, rgba(20,224,255,0.35) 100%);
+    filter: blur(4px);
+    transition: opacity 200ms ease-in-out;
+}
+
+/* Hover Effects */
+.premium-button-wrapper:hover .premium-button-border {
+    filter: brightness(110%);
+}
+
+.premium-button-wrapper:hover .premium-button {
+    transform: scale(1.02);
+    filter: brightness(110%);
+}
+
+.premium-button-wrapper:hover .premium-button-glow-hover {
+    opacity: 1;
+}
+
+.premium-button-wrapper:hover .premium-button-glow-border {
+    opacity: 1;
+}
+
+/* Active Effects */
+.premium-button:active {
+    transform: translateY(1px) scale(1.02);
+}
+
+/* Focus Visible (keyboard) - inner ring */
+.premium-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #1F90FF, inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 28px rgba(255,255,255,0.06);
+}
+
+/* Responsive adjustments for premium buttons */
+@media (max-width: 768px) {
+    .premium-button {
+        font-size: 0.8rem !important;
+        padding: 0 0.75rem !important;
+        height: 2rem !important;
+    }
+    
+    #hero .button-container {
+        gap: 12px;
+    }
 }
 
 @keyframes fadeInUp {
@@ -151,13 +290,134 @@ body {
         opacity: 0.9;
     }
 
-    #hero .upload-btn{
-      font-size: 0.8rem !important;
-      padding: 8px 12px !important;
+}
+
+/* Featured Properties Title Styling */
+.featured-properties-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    position: relative;
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    overflow: visible;
+    /* Gradient text */
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(135deg, 
+        #4A90E2 0%, 
+        #6B8DD6 30%, 
+        #A36FF5 60%, 
+        #FF8A3D 100%);
+    background-size: 200% 200%;
+    animation: featuredGradientShift 6s ease infinite, featuredTextGlow 2.5s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Box background using pseudo-element */
+.featured-properties-title::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, 
+        rgba(74, 144, 226, 0.08) 0%, 
+        rgba(107, 141, 214, 0.08) 30%, 
+        rgba(163, 111, 245, 0.08) 60%, 
+        rgba(255, 138, 61, 0.08) 100%);
+    background-size: 200% 200%;
+    box-shadow: 
+        0 6px 24px rgba(74, 144, 226, 0.12),
+        0 6px 24px rgba(163, 111, 245, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    z-index: -1;
+    animation: featuredGradientShift 6s ease infinite;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shimmer effect on hover */
+.featured-properties-title::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transition: left 0.7s ease;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 16px;
+}
+
+.featured-properties-title:hover::after {
+    left: 100%;
+}
+
+/* Enhanced box background on hover */
+.featured-properties-title:hover::before {
+    box-shadow: 
+        0 10px 40px rgba(74, 144, 226, 0.2),
+        0 10px 40px rgba(163, 111, 245, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, 
+        rgba(74, 144, 226, 0.12) 0%, 
+        rgba(107, 141, 214, 0.12) 30%, 
+        rgba(163, 111, 245, 0.12) 60%, 
+        rgba(255, 138, 61, 0.12) 100%);
+    animation: featuredGradientShift 3s ease infinite;
+}
+
+.featured-properties-title:hover {
+    transform: translateY(-3px) scale(1.015);
+    animation: featuredGradientShift 3s ease infinite, featuredTextGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes featuredGradientShift {
+    0% {
+        background-position: 0% 50%;
     }
-    #hero .explore-button{
-      font-size: 0.8rem !important;
-      padding: 8px 12px !important;
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes featuredTextGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 6px rgba(74, 144, 226, 0.35)) 
+                drop-shadow(0 0 10px rgba(163, 111, 245, 0.25));
+    }
+    50% {
+        filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.5)) 
+                drop-shadow(0 0 16px rgba(163, 111, 245, 0.4));
+    }
+}
+
+/* Ensure text is above the shimmer effect */
+.featured-properties-title > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive adjustments for Featured Properties title */
+@media (max-width: 768px) {
+    .featured-properties-title {
+        font-size: 1.875rem;
+        padding: 0.625rem 1.5rem;
+    }
+    
+    .featured-properties-title:hover {
+        transform: translateY(-2px) scale(1.01);
     }
 }
 
@@ -322,46 +582,208 @@ body {
 .listing-card {
     position: relative !important;
     border: none !important;
-    border-radius: 1rem !important;
+    border-radius: 1.25rem !important;
     overflow: hidden !important;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.08),
+        0 2px 4px rgba(0,0,0,0.04) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
     background: #fff !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+/* Gradient border effect on hover */
+.listing-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 1.25rem;
+    padding: 2px;
+    background: linear-gradient(135deg, 
+        rgba(255, 138, 61, 0.3) 0%, 
+        rgba(255, 122, 24, 0.3) 25%, 
+        rgba(40, 182, 255, 0.3) 75%, 
+        rgba(20, 224, 255, 0.3) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.listing-card:hover::before {
+    opacity: 1;
 }
 
 .listing-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(255, 138, 61, 0.15),
+        0 20px 40px rgba(40, 182, 255, 0.15),
+        0 8px 16px rgba(0,0,0,0.1) !important;
+    border-color: transparent !important;
+}
+
+/* Card body styling */
+.card-body {
+    padding: 1.25rem !important;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+    transition: background 0.4s ease;
+}
+
+.listing-card:hover .card-body {
+    background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+}
+
+.card-text {
+    font-weight: 400 !important;
+    color: #374151;
+    transition: color 0.3s ease;
+}
+
+.listing-card:hover .card-text {
+    color: #1f2937;
+}
+
+.card-text b {
+    color: #111827;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.listing-card:hover .card-text b {
+    background: linear-gradient(135deg, #FF8A3D 0%, #28B6FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .card-img-top {
     width: 100% !important;
     height: 20rem;
     object-fit: cover !important;
-    transition: transform 0.4s ease;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease !important;
+    filter: brightness(1) saturate(1);
 }
 
 .listing-card:hover .card-img-top {
-    transform: scale(1.08);
+    transform: scale(1.1);
+    filter: brightness(1.05) saturate(1.1);
 }
 
-.card-body {
-    padding: 1rem !important;
+/* Card image overlay enhancement for listing cards */
+.listing-card .card-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0,0,0,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    pointer-events: none;
 }
 
-.card-text {
-    font-weight: 400 !important;
-    color: #444;
+.listing-card:hover .card-img-overlay {
+    opacity: 1;
+    background: linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0,0,0,0.15) 100%);
 }
 
-.card-text b {
-    color: #222;
-    font-size: 1.05rem;
+/* Price styling enhancement */
+.listing-card .card-body p:last-child {
+    margin-bottom: 0 !important;
+    margin-top: 0.5rem;
+}
+
+.listing-card .card-body p:last-child b {
+    font-size: 1.25rem;
+    color: #FF8A3D;
+    background: none;
+    -webkit-text-fill-color: #FF8A3D;
+    font-weight: 700;
+}
+
+.listing-card:hover .card-body p:last-child b {
+    color: #FF7A18;
+    -webkit-text-fill-color: #FF7A18;
+}
+
+/* Rating stars enhancement */
+.listing-card .text-warning {
+    color: #fbbf24 !important;
+    filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.3));
+}
+
+.listing-card:hover .text-warning {
+    color: #f59e0b !important;
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.4));
+}
+
+/* Location icon enhancement */
+.listing-card .fa-location-dot {
+    color: #6b7280;
+    transition: color 0.3s ease;
+}
+
+.listing-card:hover .fa-location-dot {
+    color: #28B6FF;
 }
 
 .listing-link {
     text-decoration: none;
     color: inherit;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.listing-link:hover {
+    transform: none;
+}
+
+/* Shimmer effect on card */
+.listing-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.listing-card:hover::after {
+    animation: shimmer 0.8s ease;
+}
+
+@keyframes shimmer {
+    0% {
+        top: -50%;
+        left: -50%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        top: 150%;
+        left: 150%;
+        opacity: 0;
+    }
 }
 
 /* =========================================
@@ -420,24 +842,33 @@ body {
 /* =========================================
    Buttons on New/Edit/Show Pages
 ========================================= */
+/* Premium button styles override old add-btn */
+.premium-start-wrapper .premium-button.add-btn,
+.premium-start-listing-wrapper .premium-button.start-listing-btn {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Override old add-btn styles for premium buttons */
 .add-btn {
-    background-color: #fe424d !important;
+    background: transparent !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Premium button styles override old edit-btn */
+.premium-edit-wrapper .premium-button.edit-btn {
+    background: transparent !important;
     border: none !important;
 }
 
-.add-btn:hover {
-    background-color: rgb(145, 255, 196) !important;
-    color: black !important;
-}
-
+/* Override old edit-btn styles for premium buttons */
 .edit-btn {
+    background: transparent !important;
     border: none !important;
-    background-color: #fe424d !important;
-    transition: 0.2s linear !important;
-}
-
-.edit-btn:hover {
-    opacity: 0.7;
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 .book-btn {

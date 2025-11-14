@@ -99,17 +99,31 @@
     box-shadow: 0 6px 16px rgba(229,57,53,0.35) !important;
 }
 
-/* Edit/Delete Buttons */
-.edit-btn {
-    background: linear-gradient(45deg, #444, #666) !important;
-    border: none !important;
-    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+/* Premium Edit Button Wrapper */
+.premium-edit-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.edit-btn:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.18) !important;
+.premium-edit-wrapper .premium-button.edit-btn {
+    height: auto !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+    margin: 0 !important;
+    border: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+}
+
+/* Override old edit-btn styles for premium buttons */
+.edit-btn {
+    background: transparent !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
 }
 
 /* Submit Review button gradient (red-green) */

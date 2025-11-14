@@ -1,3 +1,15 @@
+// Suppress deprecation warning for util.isArray (DEP0044) from dependencies
+// This warning comes from older dependencies (like Joi) and doesn't affect functionality
+const originalEmitWarning = process.emitWarning;
+process.emitWarning = function(warning, type, code, ctor) {
+  // Suppress DEP0044 (util.isArray) deprecation warnings
+  if (code === 'DEP0044') {
+    return;
+  }
+  // Pass through all other warnings
+  return originalEmitWarning.apply(process, arguments);
+};
+
 if(process.env.NODE_ENV != "production"){
   require('dotenv').config()
 }

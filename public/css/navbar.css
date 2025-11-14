@@ -29,11 +29,60 @@
     font-size: 1.3rem !important;
     margin-right: 0.5rem !important;
 }
+
+/* Home Button Styling */
 .home-btn{
-    position:relative;
+    position: relative;
     top: -6px;
     color: #a66bff !important;
     font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    overflow: hidden !important;
+}
+
+.home-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(166, 107, 255, 0.1) 0%, rgba(74, 144, 226, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.home-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #a66bff 0%, #4A90E2 100%);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.home-btn:hover {
+    color: #8b5cf6 !important;
+    transform: translateY(-2px) !important;
+}
+
+.home-btn:hover::before {
+    opacity: 1;
+}
+
+.home-btn:hover::after {
+    width: 80%;
+}
+
+.home-btn:active {
+    transform: translateY(0) !important;
 }
 .login-btn{
     color: white !important;
@@ -111,26 +160,47 @@
     line-height: 30px !important;
 }
 
-/* Logout button: modern ghost style */
+/* Logout button: Premium button style */
+.premium-logout-wrapper {
+    margin-left: 1rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+}
+
+.premium-logout-wrapper .premium-button.logout {
+    height: 2.8rem !important; /* Smaller height than hero buttons */
+    padding: 0 0.875rem !important;
+    font-size: 0.875rem !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: normal !important;
+}
+
+.premium-logout-wrapper .premium-button-content {
+    gap: 0.375rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: normal !important;
+    height: 100% !important;
+}
+
+.premium-logout-wrapper .premium-button-content i,
+.premium-logout-wrapper .premium-button-content span {
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: normal !important;
+    vertical-align: middle !important;
+}
+
+/* Override old logout styles if they exist */
 .logout {
     display: inline-flex !important;
     align-items: center !important;
-    color: #ef4444 !important; /* red-500 */
-    background: transparent !important;
-    border: 1px solid rgba(239, 68, 68, 0.35) !important;
-    border-radius: 9999px !important;
-    padding: 0.9rem !important;
-    font-size: 0.9rem !important;
-    line-height: 1 !important;
-    margin-left: 1rem !important;
     text-decoration: none !important;
-    transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease !important;
-}
-.logout:hover {
-    background: rgba(239, 68, 68, 0.08) !important;
-    border-color: rgba(239, 68, 68, 0.55) !important;
-    color: #dc2626 !important; /* red-600 */
-    box-shadow: 0 6px 16px rgba(239,68,68,0.12) !important;
 }
 
 /* Make Features, About, Contact bold */
@@ -140,13 +210,127 @@
     font-weight: 700 !important;
 }
 
-/* Active state highlight: light blue background */
+/* Premium Navigation Links Styling */
+.navbar .nav-link[href="/features"],
+.navbar .nav-link[href="/about"],
+.navbar .nav-link[href="/contact"] {
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem !important;
+    border-radius: 10px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    overflow: hidden !important;
+    color: #374151 !important;
+}
+
+/* Gradient background on hover */
+.navbar .nav-link[href="/features"]::before,
+.navbar .nav-link[href="/about"]::before,
+.navbar .nav-link[href="/contact"]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, 
+        rgba(255, 138, 61, 0.1) 0%, 
+        rgba(255, 122, 24, 0.1) 25%, 
+        rgba(40, 182, 255, 0.1) 75%, 
+        rgba(20, 224, 255, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+/* Animated underline on hover */
+.navbar .nav-link[href="/features"]::after,
+.navbar .nav-link[href="/about"]::after,
+.navbar .nav-link[href="/contact"]::after {
+    content: '';
+    position: absolute;
+    bottom: 0.25rem;
+    left: 50%;
+    width: 0;
+    height: 2.5px;
+    background: linear-gradient(90deg, #FF8A3D 0%, #FF7A18 25%, #28B6FF 75%, #14E0FF 100%);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+
+/* Hover effects */
+.navbar .nav-link[href="/features"]:hover,
+.navbar .nav-link[href="/about"]:hover,
+.navbar .nav-link[href="/contact"]:hover {
+    color: #1f2937 !important;
+    transform: translateY(-2px) !important;
+}
+
+.navbar .nav-link[href="/features"]:hover::before,
+.navbar .nav-link[href="/about"]:hover::before,
+.navbar .nav-link[href="/contact"]:hover::before {
+    opacity: 1;
+}
+
+.navbar .nav-link[href="/features"]:hover::after,
+.navbar .nav-link[href="/about"]:hover::after,
+.navbar .nav-link[href="/contact"]:hover::after {
+    width: 70%;
+}
+
+/* Active state highlight: enhanced with gradient */
 .navbar .nav-link.active {
-    /* background: rgba(99, 102, 241, 0.12) !important; light indigo/blue */
     color: #1d4ed8 !important; /* blue-700 */
     border-radius: 10px !important;
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding: 0.5rem 1rem !important;
+    position: relative;
+    background: linear-gradient(135deg, 
+        rgba(29, 78, 216, 0.1) 0%, 
+        rgba(59, 130, 246, 0.1) 100%) !important;
+    font-weight: 700 !important;
+}
+
+.navbar .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0.25rem;
+    left: 50%;
+    width: 70%;
+    height: 2.5px;
+    background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* Active state for Features, About, Contact */
+.navbar .nav-link.active[href="/features"],
+.navbar .nav-link.active[href="/about"],
+.navbar .nav-link.active[href="/contact"] {
+    background: linear-gradient(135deg, 
+        rgba(255, 138, 61, 0.12) 0%, 
+        rgba(40, 182, 255, 0.12) 100%) !important;
+}
+
+.navbar .nav-link.active[href="/features"]::after,
+.navbar .nav-link.active[href="/about"]::after,
+.navbar .nav-link.active[href="/contact"]::after {
+    background: linear-gradient(90deg, #FF8A3D 0%, #28B6FF 100%);
+    width: 70%;
+}
+
+/* Active state for Home */
+.navbar .nav-link.active.home-btn {
+    background: linear-gradient(135deg, 
+        rgba(166, 107, 255, 0.15) 0%, 
+        rgba(74, 144, 226, 0.15) 100%) !important;
+}
+
+.navbar .nav-link.active.home-btn::after {
+    background: linear-gradient(90deg, #a66bff 0%, #4A90E2 100%);
+    width: 80%;
 }
 
 
@@ -173,17 +357,52 @@
     }
 
     /* Show logout button styled as a link below other items */
-    .logout {
+    .premium-logout-wrapper {
         display: block !important;
-        color: #000 !important;
-        background: none !important;
-        border: none !important;
         width: 100% !important;
         text-align: right !important;
-        padding: 0.5rem 1rem !important;
-        font-size: 1rem !important;
         margin: 0 !important;
-        text-decoration: none !important;
+    }
+    
+    .premium-logout-wrapper .premium-button.logout {
+        width: auto !important;
+        margin-left: auto !important;
+        height: 2rem !important;
+        padding: 0 0.875rem !important;
+        font-size: 0.875rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: normal !important;
+    }
+    
+    .premium-logout-wrapper .premium-button-content {
+        align-items: center !important;
+        line-height: normal !important;
+        height: 100% !important;
+    }
+    
+    /* Hide premium effects on mobile for simpler look */
+    .premium-logout-wrapper .premium-button-border,
+    .premium-logout-wrapper .premium-button-glow-base,
+    .premium-logout-wrapper .premium-button-glow-hover,
+    .premium-logout-wrapper .premium-button-glow-border,
+    .premium-logout-wrapper .premium-button-active-overlay,
+    .premium-logout-wrapper .premium-button-focus-glow {
+        display: none !important;
+    }
+    
+    .premium-logout-wrapper .premium-button.logout {
+        background: transparent !important;
+        border: 1px solid rgba(239, 68, 68, 0.35) !important;
+        color: #ef4444 !important;
+    }
+    
+    .premium-logout-wrapper .premium-button.logout:hover {
+        background: rgba(239, 68, 68, 0.08) !important;
+        border-color: rgba(239, 68, 68, 0.55) !important;
+        color: #dc2626 !important;
+        box-shadow: 0 6px 16px rgba(239,68,68,0.12) !important;
     }
     .login-btn{
         color: white !important;
@@ -212,6 +431,21 @@
     /* Ensure links are stacked */
     .navbar-nav > * {
         width: 100% !important;
+    }
+    
+    /* Mobile: Simplify hover effects for nav links */
+    .navbar .nav-link[href="/features"]:hover,
+    .navbar .nav-link[href="/about"]:hover,
+    .navbar .nav-link[href="/contact"]:hover,
+    .home-btn:hover {
+        transform: none !important;
+    }
+    
+    .navbar .nav-link[href="/features"]::after,
+    .navbar .nav-link[href="/about"]::after,
+    .navbar .nav-link[href="/contact"]::after,
+    .home-btn::after {
+        display: none !important;
     }
 
     /* Hamburger toggler adjustments */

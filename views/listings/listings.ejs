@@ -17,9 +17,39 @@
           <option value="24" <%= Number(limit) === 24 ? 'selected' : '' %>>24 / page</option>
           <option value="48" <%= Number(limit) === 48 ? 'selected' : '' %>>48 / page</option>
         </select>
-        <button class="btn search-btn" type="submit">
-          <i class="fa-solid fa-magnifying-glass"></i> Search
-        </button>
+        <span class="premium-button-wrapper premium-button-primary premium-search-wrapper">
+          <!-- Gradient border using wrapper technique -->
+          <span class="premium-button-border">
+            <span class="premium-button-border-inner premium-button-border-primary"></span>
+          </span>
+          
+          <!-- Button element -->
+          <button
+            class="premium-button search-btn"
+            type="submit"
+            aria-label="Search"
+          >
+            <!-- Inner content -->
+            <span class="premium-button-content">
+              <i class="fa-solid fa-magnifying-glass"></i> Search
+            </span>
+          </button>
+          
+          <!-- Outer ambient glow - base -->
+          <span class="premium-button-glow-base"></span>
+          
+          <!-- Hover glow effects - outer glow -->
+          <span class="premium-button-glow-hover"></span>
+          
+          <!-- Hover gradient border enhancement -->
+          <span class="premium-button-glow-border"></span>
+          
+          <!-- Active state inset shadow overlay -->
+          <span class="premium-button-active-overlay" data-active-overlay></span>
+          
+          <!-- Focus visible outer glow - gradient ring -->
+          <span class="premium-button-focus-glow" data-focus-glow></span>
+        </span>
       </div>
     </form>
 

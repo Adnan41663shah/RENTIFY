@@ -46,10 +46,40 @@
             <!-- Mobile view 'My Profile' link -->
             <a href="/profile/<%= currUser._id  %>" class="nav-link mobile-profile d-md-none">My Profile</a>
 
-            <a class="nav-link logout d-md-block" href="/logout" aria-label="Logout">
-              <i class="fa-solid fa-right-from-bracket me-1"></i>
-              <span>Logout</span>
-            </a>
+            <span class="premium-button-wrapper premium-button-ghost premium-logout-wrapper d-md-block">
+              <!-- Gradient border using wrapper technique -->
+              <span class="premium-button-border">
+                <span class="premium-button-border-inner premium-button-border-ghost"></span>
+              </span>
+              
+              <!-- Button element -->
+              <a
+                class="premium-button logout"
+                href="/logout"
+                aria-label="Logout"
+              >
+                <!-- Inner content -->
+                <span class="premium-button-content">
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  <span>Logout</span>
+                </span>
+              </a>
+              
+              <!-- Outer ambient glow - base -->
+              <span class="premium-button-glow-base"></span>
+              
+              <!-- Hover glow effects - outer glow -->
+              <span class="premium-button-glow-hover"></span>
+              
+              <!-- Hover gradient border enhancement -->
+              <span class="premium-button-glow-border"></span>
+              
+              <!-- Active state inset shadow overlay -->
+              <span class="premium-button-active-overlay" data-active-overlay></span>
+              
+              <!-- Focus visible outer glow - gradient ring -->
+              <span class="premium-button-focus-glow" data-focus-glow></span>
+            </span>
           <% } %>
         </div>
       </div>

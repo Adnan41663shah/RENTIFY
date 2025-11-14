@@ -38,7 +38,41 @@
             <i class="fa-solid fa-share-nodes me-1"></i> Share
           </button>
           <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
-            <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm edit-btn px-3">Edit</a>
+            <span class="premium-button-wrapper premium-button-primary premium-edit-wrapper">
+              <!-- Gradient border using wrapper technique -->
+              <span class="premium-button-border">
+                <span class="premium-button-border-inner premium-button-border-primary"></span>
+              </span>
+              
+              <!-- Button element -->
+              <button
+                type="button"
+                class="premium-button edit-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#editListingModal"
+                aria-label="Edit listing"
+              >
+                <!-- Inner content -->
+                <span class="premium-button-content">
+                  Edit
+                </span>
+              </button>
+              
+              <!-- Outer ambient glow - base -->
+              <span class="premium-button-glow-base"></span>
+              
+              <!-- Hover glow effects - outer glow -->
+              <span class="premium-button-glow-hover"></span>
+              
+              <!-- Hover gradient border enhancement -->
+              <span class="premium-button-glow-border"></span>
+              
+              <!-- Active state inset shadow overlay -->
+              <span class="premium-button-active-overlay" data-active-overlay></span>
+              
+              <!-- Focus visible outer glow - gradient ring -->
+              <span class="premium-button-focus-glow" data-focus-glow></span>
+            </span>
             <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
               <button class="btn btn-sm delete-btn px-3" aria-label="Delete this listing">Delete</button>
             </form>
@@ -234,6 +268,106 @@
               </a>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Listing Modal -->
+    <div class="modal fade" id="editListingModal" tabindex="-1" aria-labelledby="editListingModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="editListingModalLabel">Edit Listing</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="px-3 px-sm-4">
+            <!-- Progress Indicator -->
+            <div class="nl-steps d-flex align-items-center justify-content-between mb-2">
+              <div class="nl-step" data-step="1"><span>1</span><small>Basics</small></div>
+              <div class="nl-line flex-fill mx-2"></div>
+              <div class="nl-step" data-step="2"><span>2</span><small>Location & Photos</small></div>
+              <div class="nl-line flex-fill mx-2"></div>
+              <div class="nl-step" data-step="3"><span>3</span><small>Amenities</small></div>
+            </div>
+          </div>
+          <form id="editListingMultiForm" action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data" novalidate class="needs-validation">
+            <div class="modal-body pt-0">
+              <!-- Step 1: Basics -->
+              <div class="nl-step-pane" data-step="1">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input type="text" name="listing[title]" class="form-control" value="<%= listing.title %>" required>
+                  <div class="valid-feedback">Accepted</div>
+                  <div class="invalid-feedback">Title should be valid!</div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea name="listing[description]" class="form-control" rows="3" required><%= listing.description %></textarea>
+                  <div class="valid-feedback">Accepted</div>
+                  <div class="invalid-feedback">Please enter a short description!</div>
+                </div>
+                <div class="mb-1">
+                  <label class="form-label">Price</label>
+                  <input type="number" name="listing[price]" class="form-control" value="<%= listing.price %>" required>
+                  <div class="valid-feedback">Accepted</div>
+                  <div class="invalid-feedback">Price should be valid!</div>
+                </div>
+              </div>
+
+              <!-- Step 2: Photos & Location -->
+              <div class="nl-step-pane d-none" data-step="2">
+                <div class="mb-3">
+                  <label class="form-label">Current Images</label>
+                  <div class="d-flex gap-2 mb-2 flex-wrap">
+                    <% if (listing.images && listing.images.length > 0) { %>
+                      <% listing.images.slice(0,3).forEach(img => { %>
+                        <img src="<%= img.url.replace('/upload', '/upload/h_70,w_110') %>" alt="current image" height="100" width="100" class="border rounded">
+                      <% }) %>
+                    <% } else if (listing.image) { %>
+                      <img src="<%= listing.image %>" alt="current image" height="100" width="100" class="border rounded">
+                    <% } %>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Upload New Images (max 3)</label>
+                    <input type="file" name="listing[images]" class="form-control" multiple>
+                    <div class="input-help mt-1">New images will replace existing ones. (Optional)</div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="listing[location]" class="form-control" value="<%= listing.location %>" required>
+                    <div class="valid-feedback">Accepted</div>
+                    <div class="invalid-feedback">Location should be valid!</div>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Country</label>
+                    <input type="text" name="listing[country]" class="form-control" value="<%= listing.country %>" required>
+                    <div class="valid-feedback">Accepted</div>
+                    <div class="invalid-feedback">Country should be valid!</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Amenities -->
+              <div class="nl-step-pane d-none" data-step="3">
+                <div class="mb-2 d-flex align-items-center justify-content-between">
+                  <label class="form-label mb-1">Choose what you offer</label>
+                  <span class="text-muted small">Optional</span>
+                </div>
+                <input id="edit-amenities-search" type="text" placeholder="Search amenities" class="form-control mb-2" aria-label="Search amenities">
+                <div id="edit-amenities-root" class="w-100"></div>
+                <p class="mb-0 text-muted small mt-2">"Great journeys begin with a single listing."</p>
+              </div>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-between">
+              <button type="button" class="btn btn-outline-secondary" id="editBtnBack" disabled>Back</button>
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-dark" id="editBtnNext">Next</button>
+                <button type="submit" class="btn btn-dark d-none" id="editBtnSubmit">Update Listing</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -443,4 +577,300 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="/js/razorpay.js" defer></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Edit Modal Scripts -->
+  <script id="editExistingAmenitiesJSON" type="application/json"><%- JSON.stringify(listing.amenities || {}) %></script>
+  <script>
+    (function(){
+      const editModalEl = document.getElementById('editListingModal');
+      if (!editModalEl) return;
+
+      const editExistingAmenities = JSON.parse(document.getElementById('editExistingAmenitiesJSON').textContent || '{}');
+      const amenitiesData = {
+        "Property Essentials": [
+          "Wi-Fi / High-speed Internet",
+          "Air Conditioning",
+          "Heating",
+          "Hot Water",
+          "Electricity Backup (Generator/Inverter)",
+          "Private Entrance",
+          "Security Cameras on Property",
+          "Fire Extinguisher",
+          "First Aid Kit",
+          "Smoke Alarm",
+          "Carbon Monoxide Alarm"
+        ],
+        "Bedroom & Laundry": [
+          "Bed Linen",
+          "Extra Pillows & Blankets",
+          "Wardrobe / Closet",
+          "Hangers",
+          "Iron",
+          "Ironing Board",
+          "Washing Machine",
+          "Dryer",
+          "Laundry Soap",
+          "Safe"
+        ],
+        "Kitchen & Dining": [
+          "Fully Equipped Kitchen",
+          "Refrigerator",
+          "Microwave",
+          "Stove / Cooktop",
+          "Oven",
+          "Dishwasher",
+          "Toaster",
+          "Coffee Maker / Kettle",
+          "Cooking Basics (pots, pans, oil, salt, etc.)",
+          "Dishes & Silverware",
+          "Dining Table",
+          "Water Purifier"
+        ],
+        "Bathroom": [
+          "Shower",
+          "Bathtub",
+          "Towels",
+          "Toiletries (Shampoo, Soap, etc.)",
+          "Hair Dryer",
+          "Hot Water",
+          "Toilet Paper"
+        ],
+        "Entertainment": [
+          "Smart TV",
+          "Cable / Satellite Channels",
+          "Netflix / OTT Access",
+          "Sound System / Bluetooth Speaker",
+          "Board Games",
+          "Books and Magazines"
+        ],
+        "Outdoor Features": [
+          "Balcony / Terrace",
+          "Private Garden / Lawn",
+          "Private Pool",
+          "Shared Pool",
+          "Barbecue Grill",
+          "Outdoor Furniture",
+          "Fire Pit",
+          "Parking Space",
+          "Rooftop Access"
+        ],
+        "Recreation & Wellness": [
+          "Gym / Fitness Center",
+          "Yoga Mat / Meditation Space",
+          "Indoor Games (Table Tennis, Pool Table, etc.)"
+        ],
+        "Family & Kids Friendly": [
+          "High Chair",
+          "Children's Books & Toys",
+          "Child-Safe Room Setup",
+          "Babysitter Recommendations"
+        ],
+        "Work & Connectivity": [
+          "Dedicated Workspace / Desk",
+          "Office Chair",
+          "Fast Wi-Fi (Speed Mention Option)",
+          "Power Backup",
+          "Printer / Scanner"
+        ],
+        "Accessibility & Safety": [
+          "Wheelchair Accessible",
+          "Elevator",
+          "Step-Free Access",
+          "Wide Doorways",
+          "Accessible Parking",
+          "Grab Bars in Bathroom"
+        ],
+        "Pet Amenities": [
+          "Pets Allowed",
+          "Pet Bed",
+          "Food & Water Bowls",
+          "Nearby Pet Park"
+        ],
+        "Transportation & Location": [
+          "Free Parking On Premises",
+          "Street Parking",
+          "Paid Parking Nearby",
+          "EV Charger",
+          "Airport Pickup / Drop",
+          "Public Transport Nearby",
+          "Bicycle / Scooter Rental"
+        ],
+        "Housekeeping & Maintenance": [
+          "Daily Cleaning Service",
+          "Laundry Service",
+          "Trash Disposal",
+          "24/7 Maintenance Support"
+        ],
+        "Eco-Friendly Features": [
+          "Solar Power",
+          "Rainwater Harvesting",
+          "Recycling Facilities",
+          "Organic Toiletries",
+          "Sustainable Furniture"
+        ]
+      };
+
+      function renderEditAmenities(filter = ""){
+        const root = document.getElementById("edit-amenities-root");
+        if (!root) return;
+        root.innerHTML = "";
+        Object.entries(amenitiesData).forEach(([cat, items], idx) => {
+          const section = document.createElement("div");
+          section.className = "border rounded mb-2";
+
+          const header = document.createElement("button");
+          header.type = "button";
+          header.className = "w-100 text-start px-3 py-2 bg-light hover-bg border-0 d-flex align-items-center justify-content-between";
+          header.innerHTML = `<span class="font-medium">${cat}</span><span class="text-sm text-gray-500">Toggle</span>`;
+
+          const body = document.createElement("div");
+          body.className = "px-3 py-2 d-none";
+
+          const list = document.createElement("div");
+          list.className = "row g-2";
+
+          const selected = new Set((editExistingAmenities[cat] || []));
+          const filtered = items.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
+          filtered.forEach((amenity, i) => {
+            const col = document.createElement("div");
+            col.className = "col-12 col-md-6";
+            const label = document.createElement("label");
+            label.className = "d-flex align-items-center gap-2 p-2 rounded amenity-item";
+            const checked = selected.has(amenity) ? 'checked' : '';
+            label.innerHTML = `
+              <input type="checkbox" class="form-check-input" name="listing[amenities][${cat}][]" value="${amenity}" ${checked}>
+              <span class="small">${amenity}</span>
+            `;
+            col.appendChild(label);
+            list.appendChild(col);
+          });
+
+          body.appendChild(list);
+          header.addEventListener("click", () => { body.classList.toggle("d-none"); });
+          section.appendChild(header);
+          section.appendChild(body);
+          root.appendChild(section);
+        });
+      }
+
+      const editSearch = document.getElementById("edit-amenities-search");
+      if (editSearch) {
+        editSearch.addEventListener("input", (e)=> renderEditAmenities(e.target.value));
+      }
+
+      // Multistep form functionality
+      const editPanes = Array.from(document.querySelectorAll('#editListingModal .nl-step-pane'));
+      const editSteps = Array.from(document.querySelectorAll('#editListingModal .nl-step'));
+      const editBtnNext = document.getElementById('editBtnNext');
+      const editBtnBack = document.getElementById('editBtnBack');
+      const editBtnSubmit = document.getElementById('editBtnSubmit');
+      const editForm = document.getElementById('editListingMultiForm');
+      let editCurrent = 1;
+
+      function setEditActiveStep(step){
+        editCurrent = step;
+        editPanes.forEach(p => p.classList.toggle('d-none', p.getAttribute('data-step') !== String(step)));
+        editSteps.forEach(s => s.classList.toggle('active', s.getAttribute('data-step') === String(step)));
+
+        if (editBtnBack) editBtnBack.disabled = (step === 1);
+        const isLast = (step === 3);
+        if (editBtnNext) editBtnNext.classList.toggle('d-none', isLast);
+        if (editBtnSubmit) editBtnSubmit.classList.toggle('d-none', !isLast);
+      }
+
+      function validateEditCurrentStep(){
+        const pane = editPanes.find(p => p.getAttribute('data-step') === String(editCurrent));
+        if (!pane) return true;
+        
+        // Get all required inputs (excluding file inputs which are optional when editing)
+        const inputs = Array.from(pane.querySelectorAll('input:not([type="file"]), textarea, select'));
+        let ok = true;
+        let firstInvalid = null;
+        
+        inputs.forEach(el => {
+          // Skip file inputs - they're optional when editing
+          if (el.type === 'file') return;
+          
+          // Check if field is required
+          if (el.hasAttribute('required')) {
+            let isValid = true;
+            
+            // For text/number inputs and textareas, check if they have a value
+            if (el.type === 'text' || el.type === 'number' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+              const value = el.value ? String(el.value).trim() : '';
+              isValid = value !== '';
+            } else {
+              // For other input types, use native validation
+              isValid = el.checkValidity();
+            }
+            
+            if (!isValid) {
+              ok = false;
+              if (!firstInvalid) firstInvalid = el;
+              // Mark as invalid for visual feedback
+              el.classList.add('is-invalid');
+              el.classList.remove('is-valid');
+            } else {
+              // Mark as valid
+              el.classList.remove('is-invalid');
+              el.classList.add('is-valid');
+            }
+          }
+        });
+        
+        if (!ok && editForm) {
+          // Trigger validation UI
+          editForm.classList.add('was-validated');
+          // Focus first invalid input
+          if (firstInvalid) {
+            setTimeout(() => {
+              firstInvalid.focus();
+              firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+          }
+        }
+        
+        return ok;
+      }
+
+      if (editBtnNext) {
+        editBtnNext.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Validate current step
+          const isValid = validateEditCurrentStep();
+          
+          // If validation passes, move to next step
+          if (isValid) {
+            if (editCurrent < 3) {
+              setEditActiveStep(editCurrent + 1);
+            }
+          }
+        });
+      }
+      
+      if (editBtnBack) {
+        editBtnBack.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (editCurrent > 1) {
+            setEditActiveStep(editCurrent - 1);
+          }
+        });
+      }
+
+      // Reset steps and render amenities on modal show
+      editModalEl.addEventListener('shown.bs.modal', () => {
+        setEditActiveStep(1);
+        renderEditAmenities("");
+        // Clear any validation states
+        if (editForm) {
+          editForm.classList.remove('was-validated');
+          editForm.querySelectorAll('.is-invalid, .is-valid').forEach(el => {
+            el.classList.remove('is-invalid', 'is-valid');
+          });
+        }
+      });
+    })();
+  </script>
