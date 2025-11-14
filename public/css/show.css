@@ -85,18 +85,34 @@
   opacity: 1;
 }
 
-/* Book Button Styling */
-.book-btn {
-    background: linear-gradient(45deg, #b71c1c, #e53935) !important; /* match delete */
-    border: none !important;
-    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-    box-shadow: 0 4px 12px rgba(229,57,53,0.25) !important;
+/* Premium Book Button Wrapper */
+.premium-book-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 200px;
 }
 
-.book-btn:hover {
-    background: linear-gradient(45deg, #8e0000, #c62828) !important;
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 16px rgba(229,57,53,0.35) !important;
+.premium-book-wrapper .premium-button.book-btn {
+    height: auto !important;
+    padding: 0.75rem 2rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    border: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+}
+
+/* Override old book-btn styles for premium buttons */
+.book-btn {
+    background: transparent !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 /* Premium Edit Button Wrapper */
@@ -296,70 +312,442 @@ input:focus, textarea:focus {
 }
 
 /* ===============================
-   Amenities Scrollable Section
+   Amenities Section - Impressive Styling
 =============================== */
+
+/* Amenities Section Container */
+.amenities-section {
+  position: relative;
+  padding: 1.5rem 0;
+}
+
+/* "What This Place Offers" Heading */
+.amenities-heading {
+  position: relative;
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: amenitiesGradientShift 4s ease infinite;
+  text-align: center;
+  margin-bottom: 2rem !important;
+  padding: 0.75rem 1.5rem;
+  display: block;
+  width: 100%;
+}
+
+.amenities-heading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 25%, rgba(240, 147, 251, 0.1) 50%, rgba(79, 172, 254, 0.1) 75%, rgba(0, 242, 254, 0.1) 100%);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  z-index: -1;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+}
+
+.amenities-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #4facfe, #00f2fe);
+  border-radius: 2px;
+  animation: amenitiesUnderline 3s ease infinite;
+}
+
+@keyframes amenitiesGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes amenitiesUnderline {
+  0%, 100% { width: 60px; opacity: 1; }
+  50% { width: 120px; opacity: 0.8; }
+}
+
+.amenities-heading:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* Amenities Scroll Container */
 .amenities-scroll {
-  max-height: 350px; /* fixed visual height */
+  max-height: 450px;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding-right: 6px; /* space for hidden scrollbar */
-  border-radius: 0.5rem;
-  background: #ffffff;
+  padding: 1rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
 }
 
-/* Hide scrollbar on desktop while preserving scroll */
+/* Custom Scrollbar */
 .amenities-scroll::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 8px;
 }
+
+.amenities-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.amenities-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.amenities-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* Firefox scrollbar styling */
 .amenities-scroll {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: thin;
+  scrollbar-color: #667eea #f1f1f1;
 }
 
-/* Slight shadow on inner content while scrolling */
-.amenities-scroll.scrolling {
-  box-shadow: inset 0 6px 10px -10px rgba(0,0,0,0.25), inset 0 -6px 10px -10px rgba(0,0,0,0.25);
+/* Category Card Styling */
+.amenity-cat-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: amenityFadeIn 400ms ease both;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Category card hover + fade-in */
-.amenity-cat {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  animation: amenityFadeIn 350ms ease both;
-}
-.amenity-cat:hover {
-  transform: translateY(-1px);
-  background-color: #fafafa;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+.amenity-cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
-/* Staggered fade-in for first few categories */
-.amenities-list .amenity-cat:nth-child(1) { animation-delay: 30ms; }
-.amenities-list .amenity-cat:nth-child(2) { animation-delay: 60ms; }
-.amenities-list .amenity-cat:nth-child(3) { animation-delay: 90ms; }
-.amenities-list .amenity-cat:nth-child(4) { animation-delay: 120ms; }
-.amenities-list .amenity-cat:nth-child(5) { animation-delay: 150ms; }
+.amenity-cat-card:hover::before {
+  left: 100%;
+}
+
+.amenity-cat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+}
+
+/* Category Title */
+.amenity-category-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.amenity-category-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.amenity-cat-card:hover .amenity-category-title::after {
+  width: 100%;
+}
+
+/* Amenity Badges Container */
+.amenity-badges-container {
+  gap: 0.75rem;
+}
+
+/* Individual Amenity Badge */
+.amenity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1.5px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2d3748;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.amenity-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.amenity-badge:hover::before {
+  opacity: 1;
+}
+
+.amenity-badge:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(102, 126, 234, 0.5);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.25);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+}
+
+/* Amenity Icon */
+.amenity-icon {
+  color: #667eea;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.amenity-badge:hover .amenity-icon {
+  color: #764ba2;
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* Amenity Text */
+.amenity-text {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.amenity-badge:hover .amenity-text {
+  color: #1a202c;
+  font-weight: 600;
+}
+
+/* Staggered fade-in animation for categories */
+.amenities-list .amenity-cat:nth-child(1) { animation-delay: 50ms; }
+.amenities-list .amenity-cat:nth-child(2) { animation-delay: 100ms; }
+.amenities-list .amenity-cat:nth-child(3) { animation-delay: 150ms; }
+.amenities-list .amenity-cat:nth-child(4) { animation-delay: 200ms; }
+.amenities-list .amenity-cat:nth-child(5) { animation-delay: 250ms; }
+.amenities-list .amenity-cat:nth-child(6) { animation-delay: 300ms; }
+.amenities-list .amenity-cat:nth-child(7) { animation-delay: 350ms; }
+.amenities-list .amenity-cat:nth-child(8) { animation-delay: 400ms; }
 
 @keyframes amenityFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Amenity badge hover */
-.amenity-badge {
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-}
-.amenity-badge:hover {
-  transform: translateY(-1px);
-  background-color: #f1f3f5 !important; /* light */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Responsive: reduce fixed height a bit on small screens */
 @media (max-width: 576px) {
-  .amenities-scroll { max-height: 300px; }
+  .amenities-scroll {
+    max-height: 350px;
+    padding: 0.75rem;
+  }
+  
+  .amenities-heading {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .amenity-cat-card {
+    padding: 1rem;
+  }
+  
+  .amenity-badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .amenity-category-title {
+    font-size: 1rem;
+  }
+}
+
+/* ===============================
+   Booking Modal Gradient Background
+=============================== */
+#bookingModal .modal-content {
+  background: linear-gradient(135deg, #91d3ff 0%, #8bd0ff 25%, #caeaff 50%, #d6efff 75%, #d5eeff 100%) !important;
+  background-size: 200% 200% !important;
+  animation: modalGradientShift 8s ease infinite !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+#bookingModal .modal-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(130, 255, 213, 0.05) 0%, rgba(143, 255, 223, 0.05) 50%, rgba(130, 255, 213, 0.05) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#bookingModal .modal-header,
+#bookingModal .modal-body {
+  position: relative;
+  z-index: 1;
+}
+
+#bookingModal .modal-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-bottom: 2px solid rgba(130, 255, 213, 0.2) !important;
+}
+
+#bookingModal .modal-body {
+  background: transparent !important;
+}
+
+#bookingModal .form-control {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(130, 255, 213, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+#bookingModal .form-control:focus {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(130, 255, 213, 0.6) !important;
+  box-shadow: 0 0 0 0.2rem rgba(130, 255, 213, 0.25) !important;
+}
+
+#bookingModal .border.rounded {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(130, 255, 213, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+@keyframes modalGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===============================
+   Proceed to Pay Button Styling
+=============================== */
+.proceed-pay-btn {
+  background: linear-gradient(135deg, #82ffd5 0%, #059669 50%, #8fffdf 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.875rem 1.5rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(5, 255, 172, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.proceed-pay-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.proceed-pay-btn:hover::before {
+  opacity: 1;
+}
+
+.proceed-pay-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
+}
+
+.proceed-pay-btn:active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}
+
+.proceed-pay-btn:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 4px 14px rgba(16, 185, 129, 0.3) !important;
+}
+
+.proceed-pay-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.proceed-pay-btn:hover i {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.proceed-pay-btn:active i {
+  transform: scale(1) rotate(0deg);
+}
+
+/* Loading state (if needed for async operations) */
+.proceed-pay-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.proceed-pay-btn.loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .proceed-pay-btn {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 1rem !important;
+  }
+  
+  .proceed-pay-btn i {
+    font-size: 1rem;
+  }
 }
 
 /* JS helper: add/remove .scrolling based on scroll position */

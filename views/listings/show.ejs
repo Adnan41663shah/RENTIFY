@@ -132,15 +132,47 @@
           </div>
           <!-- Book Now Button -->
           <% if (!(currUser && currUser._id.equals(listing.owner._id))) { %>
-            <button class="btn btn-dark book-btn ps-5 pe-5" data-bs-toggle="modal" data-bs-target="#bookingModal">
-              Book Now
-            </button>
+            <span class="premium-button-wrapper premium-button-primary premium-book-wrapper">
+              <!-- Gradient border using wrapper technique -->
+              <span class="premium-button-border">
+                <span class="premium-button-border-inner premium-button-border-primary"></span>
+              </span>
+              
+              <!-- Button element -->
+              <button
+                type="button"
+                class="premium-button book-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#bookingModal"
+                aria-label="Book Now"
+              >
+                <!-- Inner content -->
+                <span class="premium-button-content">
+                  Book Now
+                </span>
+              </button>
+              
+              <!-- Outer ambient glow - base -->
+              <span class="premium-button-glow-base"></span>
+              
+              <!-- Hover glow effects - outer glow -->
+              <span class="premium-button-glow-hover"></span>
+              
+              <!-- Hover gradient border enhancement -->
+              <span class="premium-button-glow-border"></span>
+              
+              <!-- Active state inset shadow overlay -->
+              <span class="premium-button-active-overlay" data-active-overlay></span>
+              
+              <!-- Focus visible outer glow - gradient ring -->
+              <span class="premium-button-focus-glow" data-focus-glow></span>
+            </span>
           <% } %>
         </div>
         <% if (listing.amenities && Object.keys(listing.amenities).length) { %>
           <hr class="my-3">
-          <div class="mb-2">
-            <h5 class="mb-2">What This Place Offers</h5>
+          <div class="mb-2 amenities-section">
+            <h5 class="mb-4 amenities-heading">What This Place Offers</h5>
             <% function iconFor(item){
                  const s = String(item).toLowerCase();
                  if(s.includes('wi-fi') || s.includes('wifi')) return 'fa-wifi';
@@ -168,12 +200,13 @@
               <div class="d-flex flex-column gap-2 amenities-list">
                 <% Object.keys(listing.amenities).forEach(function(cat){ %>
                   <% if (Array.isArray(listing.amenities[cat]) && listing.amenities[cat].length) { %>
-                  <div class="border rounded p-2 amenity-cat">
-                    <div class="fw-semibold text-secondary mb-1"><%= cat %></div>
-                    <div class="d-flex flex-wrap gap-2">
+                  <div class="amenity-cat-card amenity-cat">
+                    <div class="amenity-category-title"><%= cat %></div>
+                    <div class="d-flex flex-wrap gap-2 amenity-badges-container">
                       <% listing.amenities[cat].forEach(function(item){ %>
-                        <span class="badge bg-light text-dark border px-2 py-1 hover-shadow amenity-badge">
-                          <i class="fa-solid <%= iconFor(item) %> me-1"></i><%= item %>
+                        <span class="amenity-badge">
+                          <i class="fa-solid <%= iconFor(item) %> amenity-icon"></i>
+                          <span class="amenity-text"><%= item %></span>
                         </span>
                       <% }) %>
                     </div>
@@ -232,7 +265,10 @@
                   </span></p>
               </div>
 
-              <button type="submit" class="btn btn-dark w-100">Proceed to Pay</button>
+              <button type="submit" class="btn proceed-pay-btn w-100">
+                <i class="fa-solid fa-credit-card me-2"></i>
+                Proceed to Pay
+              </button>
             </form>
           </div>
         </div>
